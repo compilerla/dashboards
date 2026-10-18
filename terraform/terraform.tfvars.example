@@ -1,0 +1,4 @@
+# Project and Region
+custom_domain = "dashboards.compiler.la"
+project_id    = "data-warehouse-492522"
+region        = "us-west1"

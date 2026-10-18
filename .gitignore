@@ -2,7 +2,7 @@
 .env
 
 # Terraform local state and modules
-.terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.*
 *.tfvars

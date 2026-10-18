@@ -18,7 +18,7 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && apt-get inst
     && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform
-ARG TERRAFORM_VERSION="1.9.8"
+ARG TERRAFORM_VERSION="1.16.6"
 RUN ARCH="$(dpkg --print-architecture)" && \
     curl -fsSL "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip" -o /tmp/terraform.zip && \
     unzip /tmp/terraform.zip -d /usr/local/bin && \
