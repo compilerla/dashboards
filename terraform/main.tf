@@ -62,3 +62,12 @@ module "cloud_run" {
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]
 }
+
+module "cloudflare" {
+  source        = "./modules/cloudflare"
+  zone_id       = var.cloudflare_zone_id
+  subdomain     = var.subdomain
+  domain_name   = var.domain_name
+  proxy_enabled = true
+  depends_on    = [module.cloud_run]
+}

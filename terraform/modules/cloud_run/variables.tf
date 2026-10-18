@@ -1,3 +1,19 @@
+variable "subdomain" {
+  description = "The subdomain for the dashboard (e.g., 'dashboards')."
+  type        = string
+}
+
+variable "domain_name" {
+  description = "The base domain name (e.g., 'compiler.la')."
+  type        = string
+}
+
+variable "custom_domain_enabled" {
+  description = "Whether to enable custom domain mapping. Set to false to skip."
+  type        = bool
+  default     = true
+}
+
 variable "cloud_sql_connection_name" {
   description = "The Cloud SQL instance connection name (project:region:instance)."
   type        = string
@@ -12,11 +28,6 @@ variable "container_image" {
 variable "cpu_limit" {
   default     = "1"
   description = "CPU limit for the Cloud Run container."
-  type        = string
-}
-
-variable "custom_domain" {
-  description = "Custom domain to map to Cloud Run. Set to empty string to skip domain mapping."
   type        = string
 }
 

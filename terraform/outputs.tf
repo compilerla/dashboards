@@ -20,7 +20,7 @@ output "cloud_sql_connection_name" {
 
 output "custom_domain" {
   description = "The custom domain mapped to Metabase in Cloudflare."
-  value       = module.cloud_run.custom_domain
+  value       = "${var.subdomain}.${var.domain_name}"
 }
 
 output "custom_domain_dns_records" {

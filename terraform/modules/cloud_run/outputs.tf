@@ -17,8 +17,3 @@ output "service_uri" {
   description = "The default *.a.run.app URI of the Cloud Run service."
   value       = google_cloud_run_v2_service.metabase.uri
 }
-
-output "custom_domain" {
-  description = "The custom domain mapped to Metabase."
-  value       = var.custom_domain
-}
