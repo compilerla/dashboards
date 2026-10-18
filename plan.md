@@ -76,14 +76,16 @@ flowchart TD
 .
 ├── .devcontainer/
 │   ├── devcontainer.json            # VS Code dev container definition
-│   └── Dockerfile                   # Developer environment image (Terraform, gcloud, pre-commit)
+│   ├── Dockerfile                   # Developer environment image (Terraform, gcloud, pre-commit)
+│   └── postCreate.sh                # Container initialization & hook setup
 ├── .github/
 │   └── workflows/
 │       ├── terraform-plan.yml       # Runs on pull requests to validate & plan
 │       └── terraform-apply.yml      # Runs on merge to main to apply infrastructure
+├── bin/                             # Helper bash scripts for inside the dev container
 ├── compose.yml                      # Dev container service + local Metabase & Postgres
 ├── .env.example                     # Sample local environment variables
-├── bin/                             # Helper bash scripts for inside the dev container
+├── .pre-commit-config.yaml          # Conventional commits & file hygiene hooks
 ├── terraform/
 │   ├── main.tf                      # Cloud provider, backend configuration
 │   ├── variables.tf                 # Environment variables and configurable parameters

@@ -4,6 +4,7 @@
   "service": "dev",
   "runServices": ["dev"],
   "workspaceFolder": "/home/compiler/src",
+  "postCreateCommand": ["/bin/bash", ".devcontainer/postCreate.sh"],
   "shutdownAction": "stopCompose",
   "customizations": {
     "vscode": {
@@ -26,4 +27,3 @@
     }
   }
 }
-
