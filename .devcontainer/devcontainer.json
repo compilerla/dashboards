@@ -1,0 +1,29 @@
+{
+  "name": "compilerla/dashboards",
+  "dockerComposeFile": ["../compose.yml"],
+  "service": "dev",
+  "runServices": ["dev"],
+  "workspaceFolder": "/home/compiler/src",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
+      },
+      "extensions": [
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "hashicorp.terraform",
+        "mhutchie.git-graph",
+        "ms-azuretools.vscode-docker",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  }
+}
+

@@ -1,0 +1,23 @@
+# Environment files
+.env
+
+# Terraform local state and modules
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform.tfvars.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+
+# OS and Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
