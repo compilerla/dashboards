@@ -6,48 +6,7 @@ This document outlines the end-to-end architecture, repository structure, and ph
 
 ## 1. System Architecture
 
-```mermaid
-flowchart TD
-    subgraph Users & Ingress
-        U_Internal["Internal Users (Google Workspace SSO)"]
-        U_External["External Users (Username / Password)"]
-        CF["Cloudflare DNS & Proxy (dashboards.compiler.la)"]
-    end
-
-    subgraph GCP ["Google Cloud Platform (Project: data-warehouse-492522 | Region: us-west1)"]
-        subgraph CloudRun ["Cloud Run (Managed Container Runtime)"]
-            MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
-        end
-
-        subgraph Storage_State ["Application State & Secrets"]
-            CSQL[("Cloud SQL PostgreSQL<br/>(Application Metadata & Dashboards)")]
-            SM["Secret Manager<br/>(DB Pass, Encryption Key, OAuth Secret)"]
-        end
-
-        subgraph Analytics ["Analytics Warehouse"]
-            BQ[("Google BigQuery (data-warehouse-492522)")]
-        end
-
-        subgraph IAM_Service ["Security & Identity"]
-            SA["Cloud Run Service Account<br/>(roles/bigquery.jobUser<br/>roles/bigquery.dataViewer)"]
-        end
-    end
-
-    subgraph Outbound ["Notifications"]
-        GW_SMTP["Google Workspace SMTP Relay<br/>(Invitations, Alerts, Password Resets)"]
-    end
-
-    U_Internal --> CF
-    U_External --> CF
-    CF -->|HTTPS| MB
-
-    MB -->|Cloud SQL Connection Unix Socket| CSQL
-    MB -.->|Fetch Secrets on Boot| SM
-    MB -->|Native IAM Auth / Zero Keys| BQ
-    SA -.->|Attached Identity| MB
-
-    MB -->|Port 587 TLS| GW_SMTP
-```
+Refer to [docs/explanation/architecture.md](docs/explanation/architecture.md) for the detailed system architecture and data flow diagrams.
 
 ---
 
@@ -72,31 +31,7 @@ flowchart TD
 
 ## 3. Recommended Repository Structure
 
-```text
-.
-├── .devcontainer/
-│   ├── devcontainer.json            # VS Code dev container definition
-│   ├── Dockerfile                   # Developer environment image (Terraform, gcloud, pre-commit)
-│   └── postCreate.sh                # Container initialization & hook setup
-├── .github/
-│   └── workflows/
-│       ├── terraform-plan.yml       # Runs on pull requests to validate & plan
-│       └── terraform-apply.yml      # Runs on merge to main to apply infrastructure
-├── bin/                             # Helper bash scripts for inside the dev container
-├── compose.yml                      # Dev container service + local Metabase & Postgres
-├── .env.example                     # Sample local environment variables
-├── .pre-commit-config.yaml          # Conventional commits & file hygiene hooks
-├── terraform/
-│   ├── main.tf                      # Cloud provider, backend configuration
-│   ├── variables.tf                 # Environment variables and configurable parameters
-│   ├── outputs.tf                   # Outputs (Cloud Run URL, Cloud SQL connection name)
-│   ├── cloud_run.tf                 # Cloud Run service, env vars, scaling, and secrets
-│   ├── cloud_sql.tf                 # Cloud SQL PostgreSQL instance and database
-│   ├── iam.tf                       # Service account and BigQuery / Secret Manager roles
-│   ├── secrets.tf                   # Secret Manager resources
-│   └── terraform.tfvars.example     # Template for project-specific variables
-└── README.md
-```
+Refer to [docs/reference/structure.md](docs/reference/structure.md) for the detailed repository structure.
 
 ---
 
