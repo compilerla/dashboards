@@ -15,6 +15,7 @@
 ├── .env.example                     # Sample local environment variables
 ├── .pre-commit-config.yaml          # Conventional commits & file hygiene hooks
 ├── plan.md                          # Full architectural design & implementation plan
+├── dbt/                            # dbt project (models, macros, snapshots, profiles)
 ├── terraform/                       # Infrastructure as Code (GCP Cloud Run & Cloud SQL)
 └── README.md
 ```

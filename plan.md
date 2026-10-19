@@ -6,7 +6,67 @@ This document outlines the end-to-end architecture, repository structure, and ph
 
 ## 1. System Architecture
 
-Refer to [docs/explanation/architecture.md](docs/explanation/architecture.md) for the detailed system architecture and data flow diagrams.
+```mermaid
+flowchart TD
+    subgraph Users & Ingress
+        U_Internal["Internal Users (Google Workspace SSO)"]
+        U_External["External Users (Username / Password)"]
+        CF["Cloudflare DNS & Proxy (dashboards.compiler.la)"]
+    end
+
+    subgraph Sources ["Source Systems"]
+        CSV["Manual CSV Uploads"]
+        API["External APIs (Toggl, Google Workspace)"]
+    end
+
+    subgraph GCP ["Google Cloud Platform (Project: data-warehouse-492522 | Region: us-west1)"]
+        subgraph Orchestration ["Data Orchestration"]
+            Workflows["Cloud Workflows"]
+        end
+
+        subgraph Storage ["Storage & Processing"]
+            GCS[("GCS Bucket (compiler-data-lake)")]
+            dbtRun["Cloud Run (dbt Core Execution)"]
+        end
+
+        subgraph Analytics ["Analytics Warehouse"]
+            BQ[("Google BigQuery (data-warehouse-492522)")]
+        end
+
+        subgraph CloudRun ["Application Runtime"]
+            MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
+        end
+
+        subgraph Storage_State ["Application State & Secrets"]
+            CSQL[("Cloud SQL PostgreSQL<br/>(Application Metadata & Dashboards)")]
+            SM["Secret Manager<br/>(DB Pass, Encryption Key, OAuth Secret)"]
+        end
+
+        subgraph IAM_Service ["Security & Identity"]
+            SA["Cloud Run Service Account<br/>(roles/bigquery.jobUser<br/>roles/bigquery.dataViewer)"]
+        end
+    end
+
+    subgraph Outbound ["Notifications"]
+        GW_SMTP["Google Workspace SMTP Relay<br/>(Invitations, Alerts, Password Resets)"]
+    end
+
+    U_Internal --> CF
+    U_External --> CF
+    CF -->|HTTPS| MB
+
+    Sources --> Workflows
+    Workflows -->|Python Jobs| GCS
+    GCS --> dbtRun
+    dbtRun -->|SQL Transformation| BQ
+
+    MB -->|Cloud SQL Connection Unix Socket| CSQL
+    MB -.->|Fetch Secrets on Boot| SM
+    MB -->|Native IAM Auth / Zero Keys| BQ
+    SA -.->|Attached Identity| MB
+
+    MB -->|Port 587 TLS| GW_SMTP
+```
 
 ---
 
@@ -21,6 +81,9 @@ Refer to [docs/explanation/architecture.md](docs/explanation/architecture.md) fo
 | **Instance Policy**      | **Min Instances: 1**                   | Prevents cold-start delays and ensures Metabase background syncs, alerts, and scheduled pulses run continuously.                               |
 | **Application Database** | **Cloud SQL PostgreSQL**               | Production-ready state store for Metabase (dashboards, queries, users, permissions). Never use the default embedded H2 database in production. |
 | **Analytics Warehouse**  | **Google BigQuery**                    | Native driver built into Metabase. Authenticated via the Cloud Run attached Service Account (no JSON key rotation needed).                     |
+| **Data Orchestration**   | **Google Cloud Workflows**             | Serverless orchestration for API and file ingestion. Low-cost and scales to zero.                                                            |
+| **Data Modeling**        | **dbt Core**                            | Open-source analytics modeling; run as containerized jobs on Cloud Run to avoid dedicated VMs.                                                      |
+| **Ingestion Method**     | **Python Scripts**                      | Leverage existing Python libraries (e.g., Toggl access) to land raw data into GCS.                                                                |
 | **Authentication**       | **Dual Auth: Google OAuth + Password** | Google Workspace OAuth restricted to `@compiler.la` for internal staff, plus password invites enabled for external stakeholders.               |
 | **Outbound Email**       | **Google Workspace SMTP Relay**        | Reliable delivery of user invitations, password resets, and automated dashboard subscriptions.                                                 |
 | **Secrets Management**   | **GCP Secret Manager**                 | Securely injects database passwords, encryption keys, and client secrets directly into container environment variables.                        |
@@ -97,3 +160,11 @@ Following the `compilerla` pattern:
    - Connect BigQuery datasets and establish permission groups.
 5. **Phase 5: Backup & Upgrade Runbooks**:
    - Document automated backup verification and container image bump process.
+6. **Phase 6: Data Ingestion (Workflows & GCS)**:
+   - Set up Cloud Workflows and Cloud Run jobs.
+   - Implement Python-based logic for API and CSV ingestion.
+   - Verify raw data landing in `compiler-data-lake` GCS bucket.
+7. **Phase 7: Analytics Warehouse (dbt & BigQuery)**:
+   - Initialize dbt Core project in the repository.
+   - Deploy dbt transformation jobs to Cloud Run.
+   - Map dbt models to BigQuery and verify in Metabase.
