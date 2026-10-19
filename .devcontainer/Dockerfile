@@ -45,6 +45,7 @@ WORKDIR /home/$USER/src
 # Update PATH for local pip installs
 ENV PATH="$PATH:/home/$USER/.local/bin"
 
-# Update pip and install pre-commit
+# Update pip and install Python tooling
 RUN python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir pre-commit
+    python -m pip install --no-cache-dir pre-commit && \
+    python -m pip install --no-cache-dir -r docs/requirements.txt

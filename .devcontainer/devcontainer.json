@@ -2,7 +2,7 @@
   "name": "compilerla/dashboards",
   "dockerComposeFile": ["../compose.yml"],
   "service": "dev",
-  "runServices": ["dev"],
+  "runServices": ["dev", "docs"],
   "workspaceFolder": "/home/compiler/src",
   "postCreateCommand": ["/bin/bash", ".devcontainer/postCreate.sh"],
   "postAttachCommand": ["/bin/bash", ".devcontainer/postAttach.sh"],
