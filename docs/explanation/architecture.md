@@ -12,18 +12,32 @@ flowchart TD
         CF["Cloudflare DNS & Proxy (dashboards.compiler.la)"]
     end
 
+    subgraph Sources ["Source Systems"]
+        CSV["Manual CSV Uploads"]
+        API["External APIs (Toggl, Google Workspace)"]
+    end
+
     subgraph GCP ["Google Cloud Platform (Project: data-warehouse-492522 | Region: us-west1)"]
-        subgraph CloudRun ["Cloud Run (Managed Container Runtime)"]
+        subgraph Orchestration ["Data Orchestration"]
+            Workflows["Cloud Workflows"]
+        end
+
+        subgraph Storage ["Storage & Processing"]
+            GCS[("GCS Bucket (compiler-data-lake)")]
+            dbtRun["Cloud Run (dbt Core Execution)"]
+        end
+
+        subgraph Analytics ["Analytics Warehouse"]
+            BQ[("Google BigQuery (data-warehouse-492522)")]
+        end
+
+        subgraph CloudRun ["Application Runtime"]
             MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
         end
 
         subgraph Storage_State ["Application State & Secrets"]
             CSQL[("Cloud SQL PostgreSQL<br/>(Application Metadata & Dashboards)")]
             SM["Secret Manager<br/>(DB Pass, Encryption Key, OAuth Secret)"]
-        end
-
-        subgraph Analytics ["Analytics Warehouse"]
-            BQ[("Google BigQuery (data-warehouse-492522)")]
         end
 
         subgraph IAM_Service ["Security & Identity"]
@@ -38,6 +52,11 @@ flowchart TD
     U_Internal --> CF
     U_External --> CF
     CF -->|HTTPS| MB
+
+    Sources --> Workflows
+    Workflows -->|Python Jobs| GCS
+    GCS --> dbtRun
+    dbtRun -->|SQL Transformation| BQ
 
     MB -->|Cloud SQL Connection Unix Socket| CSQL
     MB -.->|Fetch Secrets on Boot| SM
@@ -61,5 +80,6 @@ flowchart TD
 | **Authentication**       | **Dual Auth: Google OAuth + Password** | Google Workspace OAuth restricted to `@compiler.la` for internal staff, plus password invites enabled for external stakeholders.               |
 | **Outbound Email**       | **Google Workspace SMTP Relay**        | Reliable delivery of user invitations, password resets, and automated dashboard subscriptions.                                                 |
 | **Secrets Management**   | **GCP Secret Manager**                 | Securely injects database passwords, encryption keys, and client secrets directly into container environment variables.                        |
-| **IaC & Automation**     | **Terraform + GitHub Actions**         | Fully reproducible infrastructure; automated `terraform plan` on Pull Requests and `terraform apply` via release tagging.                      |
-| **Local Development**    | **VS Code Dev Containers**             | Cross-platform consistency across Linux, macOS, and Windows matching `compilerla` Dev Container standards.                                     |
+| **Data Orchestration**   | **Google Cloud Workflows**             | Serverless orchestration for API and file ingestion. Low-cost and scales to zero.                                                            |
+| **Data Modeling**        | **dbt Core**                           | Open-source analytics modeling; run as containerized jobs on Cloud Run to avoid dedicated VMs.                                                 |
+| **Ingestion Method**     | **Python Scripts**                     | Leverage existing Python libraries (e.g., Toggl access) to land raw data into GCS.                                                             |
