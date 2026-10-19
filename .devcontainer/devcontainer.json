@@ -5,6 +5,7 @@
   "runServices": ["dev"],
   "workspaceFolder": "/home/compiler/src",
   "postCreateCommand": ["/bin/bash", ".devcontainer/postCreate.sh"],
+  "postAttachCommand": ["/bin/bash", ".devcontainer/postAttach.sh"],
   "shutdownAction": "stopCompose",
   "customizations": {
     "vscode": {
