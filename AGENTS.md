@@ -11,6 +11,8 @@
 - **Terraform Execution**: ALWAYS run terraform commands via `exec` against the existing, running `dev` compose service. Do not run them directly on the host and do not run them in a new ephemeral `dev` service. This is where GCP credentials will be configured.
 - **Verification**: Run `terraform fmt` and `terraform validate` after every terraform file addition, modification, etc.
 - **Pre-commit**: Hooks are installed automatically via `.devcontainer/postCreate.sh`. Run `pre-commit run --all --all-files` after making file modifications.
+- **GitHub Actions**: ALWAYS use the latest full commit SHA reference for external steps, with a comment of the current version number.
+- **Docs**: When making changes, the docs should be checked and updated accordingly if necessary.
 
 ## Constraints & Gotchas
 
