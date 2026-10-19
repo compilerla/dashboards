@@ -77,7 +77,7 @@ jobs:
   docs:
     name: Publish docs
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || (github.event.push.branch == 'main')
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
     permissions:
       contents: write
     steps:
