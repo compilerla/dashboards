@@ -2,10 +2,15 @@ FROM python:3.13-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    USER=compiler
+    USER=compiler \
+    USER_UID=1000 \
+    USER_GID=1000
 
 # Install system dependencies and patch OS packages to reduce known vulnerabilities
-RUN apt-get update && apt-get upgrade -y --no-install-recommends && apt-get install -y --no-install-recommends \
+# using the archives and lists cache
+RUN --mount=type=cache,id=apt-archives,sharing=locked,target=/var/cache/apt/archives \
+    --mount=type=cache,id=apt-lists,sharing=locked,target=/var/lib/apt/lists \
+    apt-get update && apt-get upgrade -y --no-install-recommends && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     git \
@@ -43,9 +48,20 @@ USER $USER
 WORKDIR /home/$USER/src
 
 # Update PATH for local pip installs
-ENV PATH="$PATH:/home/$USER/.local/bin"
+ENV PATH="$PATH:/home/$USER/.local/bin" \
+    # update env for local pip installs
+    # see https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE
+    # since all `pip install` commands are in the context of $USER
+    # $PYTHONUSERBASE is the location used by default
+    PYTHONUSERBASE="/home/${USER}/.local" \
+    # where to store the pip cache (use the default)
+    # https://pip.pypa.io/en/stable/cli/pip/#cmdoption-cache-dir
+    PIP_CACHE_DIR="/home/${USER}/.cache/pip"
+
+COPY docs/requirements.txt docs/requirements.txt
 
 # Update pip and install Python tooling
-RUN python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir pre-commit && \
-    python -m pip install --no-cache-dir -r docs/requirements.txt
+RUN --mount=type=cache,id=pipcache,target=${PIP_CACHE_DIR},uid=${USER_UID},gid=${USER_GID} \
+    python -m pip install --user --upgrade pip && \
+    python -m pip install --user pre-commit && \
+    python -m pip install --user -r docs/requirements.txt
