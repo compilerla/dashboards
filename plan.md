@@ -38,22 +38,9 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
 
 ---
 
-## 4. Phase 1: Dev Container & Local Development
+## 4. Production Configuration Details
 
-Following the `compilerla` pattern:
-
-- **`compose.yml`** orchestrates three services:
-  1. `dev`: VS Code developer container mounting the repository at `/home/compiler/src`, running as user `compiler`.
-  2. `metabase`: Official Metabase Docker container connected to local Postgres.
-  3. `postgres`: PostgreSQL 16 backing Metabase application state.
-- **`.devcontainer/devcontainer.json`** configures VS Code extensions (`hashicorp.terraform`, `gitlens`, `prettier`, etc.) and sets the default terminal profile.
-- **`.devcontainer/Dockerfile`** installs developer tools: Terraform/OpenTofu, Google Cloud CLI (`gcloud`), `pre-commit`, and Postgres client utilities.
-
----
-
-## 5. Production Configuration Details
-
-### 5.1 Cloud Run Sizing & Environment Variables
+### 4.1 Cloud Run Sizing & Environment Variables
 
 - **CPU & Memory**: 1 vCPU, 2 GiB RAM (can scale to 2 vCPU / 4 GiB if user concurrency grows).
 - **Scaling Rules**: `min_instances = 1`, `max_instances = 3`.
@@ -68,7 +55,7 @@ Following the `compilerla` pattern:
   - `MB_SITE_URL`: `https://dashboards.compiler.la`
   - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 2 GiB container limit).
 
-### 5.2 BigQuery Authentication
+### 4.2 BigQuery Authentication
 
 - Dedicated Service Account: `metabase-runner@data-warehouse-492522.iam.gserviceaccount.com`.
 - IAM roles granted:
@@ -76,7 +63,7 @@ Following the `compilerla` pattern:
   - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables).
   - `roles/cloudsql.client` (permits connecting to Cloud SQL via unix domain socket).
 
-### 5.3 Ingress & Cloudflare DNS
+### 4.3 Ingress & Cloudflare DNS
 
 1. In GCP Cloud Run, configure Custom Domain Mapping for `dashboards.compiler.la`.
 2. In Cloudflare DNS:
@@ -85,7 +72,7 @@ Following the `compilerla` pattern:
 
 ---
 
-## 6. Phased Implementation Roadmap
+## 5. Phased Implementation Roadmap
 
 1. **Phase 1: Dev Container & Local Development**:
    - Set up `.devcontainer/devcontainer.json`, `.devcontainer/Dockerfile`, `compose.yml`, and `.env.example`.
