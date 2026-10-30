@@ -93,6 +93,9 @@ resource "google_cloud_run_domain_mapping" "custom_domain" {
   name     = "${var.subdomain}.${var.domain_name}"
   project  = var.project_id
 
+  metadata {
+    namespace = var.project_id
+  }
   spec {
     certificate_mode = "AUTOMATIC"
     route_name       = var.service_name
