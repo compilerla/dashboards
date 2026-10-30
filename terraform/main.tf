@@ -12,10 +12,19 @@ module "iam" {
   depends_on = [module.apis]
 }
 
+module "wif" {
+  source = "./modules/wif"
+
+  project_id         = var.project_id
+  service_account_id = module.iam.github_actions_service_account_id
+
+  depends_on = [module.iam]
+}
+
 module "bigquery" {
   source = "./modules/bigquery"
 
-  metabase_service_account_email = module.iam.service_account_email
+  metabase_service_account_email = module.iam.metabase_service_account_email
   project_id                     = var.project_id
 
   depends_on = [module.apis, module.iam]
@@ -58,7 +67,7 @@ module "cloud_run" {
   encryption_secret_key_secret_id = module.secrets.encryption_secret_key_secret_id
   project_id                      = var.project_id
   region                          = var.region
-  service_account_email           = module.iam.service_account_email
+  service_account_email           = module.iam.metabase_service_account_email
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]
 }

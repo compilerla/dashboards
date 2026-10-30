@@ -28,7 +28,8 @@ output "custom_domain_dns_records" {
   value       = module.cloud_run.custom_domain_resource_records
 }
 
-output "service_account_email" {
-  description = "The email address of the Cloud Run runtime service account."
-  value       = module.iam.service_account_email
+output "metabase_service_account_email" {
+  description = "The email address of the Metabase Cloud Run runtime service account."
+  value       = module.iam.metabase_service_account_email
+
 }
