@@ -3,14 +3,14 @@ resource "random_password" "db_password" {
   special = false
 }
 
-resource "random_password" "encryption_secret_key" {
+resource "random_password" "metabase_encryption_secret_key" {
   length  = 32
   special = false
 }
 
 locals {
-  resolved_db_password    = var.db_password != "" ? var.db_password : random_password.db_password.result
-  resolved_encryption_key = var.encryption_secret_key != "" ? var.encryption_secret_key : random_password.encryption_secret_key.result
+  resolved_db_password             = var.db_password != "" ? var.db_password : random_password.db_password.result
+  resolved_metabase_encryption_key = var.metabase_encryption_secret_key != "" ? var.metabase_encryption_secret_key : random_password.metabase_encryption_secret_key.result
 }
 
 # Database Password Secret
@@ -29,7 +29,7 @@ resource "google_secret_manager_secret_version" "db_password" {
 }
 
 # Encryption Secret Key Secret
-resource "google_secret_manager_secret" "encryption_key" {
+resource "google_secret_manager_secret" "metabase_encryption_key" {
   project   = var.project_id
   secret_id = "metabase-encryption-secret-key"
 
@@ -38,9 +38,9 @@ resource "google_secret_manager_secret" "encryption_key" {
   }
 }
 
-resource "google_secret_manager_secret_version" "encryption_key" {
-  secret      = google_secret_manager_secret.encryption_key.id
-  secret_data = local.resolved_encryption_key
+resource "google_secret_manager_secret_version" "metabase_encryption_key" {
+  secret      = google_secret_manager_secret.metabase_encryption_key.id
+  secret_data = local.resolved_metabase_encryption_key
 }
 
 # Google OAuth Client Secret (Conditional)

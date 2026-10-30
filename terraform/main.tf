@@ -64,7 +64,7 @@ module "cloud_run" {
   database_name                   = module.database.database_name
   database_user                   = module.database.database_user
   db_password_secret_id           = module.secrets.db_password_secret_id
-  encryption_secret_key_secret_id = module.secrets.encryption_secret_key_secret_id
+  encryption_secret_key_secret_id = module.secrets.metabase_encryption_secret_key_secret_id
   project_id                      = var.project_id
   region                          = var.region
   service_account_email           = module.iam.metabase_service_account_email

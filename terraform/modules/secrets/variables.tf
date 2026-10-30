@@ -5,7 +5,7 @@ variable "db_password" {
   type        = string
 }
 
-variable "encryption_secret_key" {
+variable "metabase_encryption_secret_key" {
   default     = ""
   description = "Optional pre-defined 32+ character Metabase encryption key. If left empty, a secure random key is generated."
   sensitive   = true
