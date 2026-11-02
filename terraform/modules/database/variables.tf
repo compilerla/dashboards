@@ -11,8 +11,8 @@ variable "database_password" {
 }
 
 variable "database_tier" {
-  default     = "db-f1-micro"
-  description = "The machine tier for the Cloud SQL PostgreSQL instance (e.g. db-f1-micro, db-g1-small, db-custom-1-3840)."
+  default     = "db-perf-optimized-N-2"
+  description = "The machine tier for the Cloud SQL PostgreSQL instance."
   type        = string
 }
 
