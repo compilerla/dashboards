@@ -42,7 +42,7 @@ jobs:
           terraform_version: 1.16.6 # should match TF_VERSION in .devcontainer/Dockerfile
 
       - name: Initialize Terraform and select workspace
-        run: ./init.sh
+        run: ./init.sh prod
 
       - name: Terraform Plan
         env:
