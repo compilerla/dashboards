@@ -68,7 +68,7 @@ module "cloud_run" {
   project_id                      = var.project_id
   region                          = var.region
   service_account_email           = module.iam.metabase_service_account_email
-  container_image                 = var.metabase_container_image
+  container_tag                   = var.metabase_container_tag
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]
 }

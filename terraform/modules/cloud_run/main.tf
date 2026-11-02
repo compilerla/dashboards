@@ -9,7 +9,7 @@ resource "google_cloud_run_v2_service" "metabase" {
   template {
     service_account = var.service_account_email
     containers {
-      image = var.container_image
+      image = "ghcr.io/compilerla/dashboards/metabase:${var.container_tag}"
       env {
         name  = "JAVA_OPTS"
         value = var.java_opts

@@ -13,7 +13,7 @@ variable "cloud_sql_connection_name" {
   type        = string
 }
 
-variable "container_image" {
+variable "container_tag" {
   description = "Docker image tag for Metabase."
   type        = string
 }

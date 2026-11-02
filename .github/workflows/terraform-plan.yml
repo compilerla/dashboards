@@ -46,7 +46,7 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_metabase_container_image: ghcr.io/${{ github.repository }}/metabase:${{ steps.get_main_sha.outputs.sha }}
+          TF_VAR_metabase_container_tag: ${{ steps.get_main_sha.outputs.sha }}
         run: terraform plan -out=tfplan -lock-timeout=5m
 
       - name: Setup tf-summarize

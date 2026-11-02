@@ -27,7 +27,7 @@ variable "region" {
   type        = string
 }
 
-variable "metabase_container_image" {
-  description = "The Docker image and tag to deploy."
+variable "metabase_container_tag" {
+  description = "The Docker tag to deploy."
   type        = string
 }
