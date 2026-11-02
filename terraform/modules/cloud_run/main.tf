@@ -69,6 +69,16 @@ resource "google_cloud_run_v2_service" "metabase" {
         }
       }
 
+      startup_probe {
+        tcp_socket {
+          port = 5432
+        }
+        initial_delay_seconds = 30
+        period_seconds        = 10
+        timeout_seconds       = 5
+        failure_threshold     = 60
+      }
+
       volume_mounts {
         mount_path = "/cloudsql"
         name       = "cloudsql"
