@@ -15,7 +15,10 @@
 ├── .env.example                     # Sample local environment variables
 ├── .pre-commit-config.yaml          # Conventional commits & file hygiene hooks
 ├── plan.md                          # Full architectural design & implementation plan
-├── dbt/                            # dbt project (models, macros, snapshots, profiles)
+├── dbt/                             # dbt project (models, macros, snapshots, profiles)
+├── metabase/                        # Custom Metabase image (socat TCP bridge)
+│   ├── Dockerfile
+│   └── entrypoint.sh
 ├── terraform/                       # Infrastructure as Code (GCP Cloud Run & Cloud SQL)
 └── README.md
 ```

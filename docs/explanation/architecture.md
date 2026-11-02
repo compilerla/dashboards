@@ -32,7 +32,7 @@ flowchart TD
         end
 
         subgraph CloudRun ["Application Runtime"]
-            MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
+            MB["Metabase Custom Container<br/>(socat TCP bridge)<br/>Min Instances: 1 | 2 GiB RAM"]
         end
 
         subgraph Storage_State ["Application State & Secrets"]
@@ -58,7 +58,7 @@ flowchart TD
     GCS --> dbtRun
     dbtRun -->|SQL Transformation| BQ
 
-    MB -->|Cloud SQL Connection Unix Socket| CSQL
+    MB -->|TCP localhost:5432 → socat bridge| CSQL
     MB -.->|Fetch Secrets on Boot| SM
     MB -->|Native IAM Auth / Zero Keys| BQ
     SA -.->|Attached Identity| MB
