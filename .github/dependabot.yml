@@ -17,7 +17,9 @@ updates:
     labels:
       - "dependencies"
   - package-ecosystem: "docker"
-    directory: "/.devcontainer"
+    directories:
+      - "/.devcontainer"
+      - "/metabase"
     schedule:
       interval: "weekly"
     commit-message:
