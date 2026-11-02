@@ -8,12 +8,6 @@ variable "domain_name" {
   type        = string
 }
 
-variable "custom_domain_enabled" {
-  description = "Whether to enable custom domain mapping. Set to false to skip."
-  type        = bool
-  default     = true
-}
-
 variable "cloud_sql_connection_name" {
   description = "The Cloud SQL instance connection name (project:region:instance)."
   type        = string

@@ -88,7 +88,6 @@ resource "google_cloud_run_v2_service_iam_member" "public_access" {
 }
 
 resource "google_cloud_run_domain_mapping" "custom_domain" {
-  count    = var.custom_domain_enabled ? 1 : 0
   location = var.region
   name     = "${var.subdomain}.${var.domain_name}"
   project  = var.project_id
