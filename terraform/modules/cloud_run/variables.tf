@@ -14,7 +14,6 @@ variable "cloud_sql_connection_name" {
 }
 
 variable "container_image" {
-  default     = "metabase/metabase:v0.65.x"
   description = "Docker image tag for Metabase."
   type        = string
 }

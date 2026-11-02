@@ -26,3 +26,8 @@ variable "region" {
   description = "The GCP region to deploy resources into."
   type        = string
 }
+
+variable "metabase_container_image" {
+  description = "The Docker image and tag to deploy."
+  type        = string
+}

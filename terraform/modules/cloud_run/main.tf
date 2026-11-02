@@ -1,9 +1,10 @@
 resource "google_cloud_run_v2_service" "metabase" {
-  name        = var.service_name
-  location    = var.region
-  project     = var.project_id
-  description = "Metabase OSS Container"
-  ingress     = "INGRESS_TRAFFIC_ALL"
+  name                = var.service_name
+  location            = var.region
+  project             = var.project_id
+  description         = "Metabase OSS Container"
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  deletion_protection = false
 
   template {
     service_account = var.service_account_email
@@ -19,10 +20,19 @@ resource "google_cloud_run_v2_service" "metabase" {
       }
       env {
         name  = "MB_DB_HOST"
-        value = "/cloudsql/data-warehouse-492522:us-west1:metabase-db"
+        value = "localhost"
+      }
+      env {
+        name  = "MB_DB_PORT"
+        value = "5432"
+      }
+      env {
+        name  = "CLOUD_SQL_CONNECTION_NAME"
+        value = var.cloud_sql_connection_name
       }
       env {
         name = "MB_DB_PASS"
+
         value_source {
           secret_key_ref {
             secret  = "metabase-db-password"
