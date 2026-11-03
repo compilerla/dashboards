@@ -18,16 +18,6 @@ output "cloud_sql_connection_name" {
   value       = module.database.connection_name
 }
 
-output "custom_domain" {
-  description = "The custom domain mapped to Metabase in Cloudflare."
-  value       = "${var.subdomain}.${var.domain_name}"
-}
-
-output "custom_domain_dns_records" {
-  description = "DNS resource records to create in Cloudflare for domain verification."
-  value       = module.cloud_run.custom_domain_resource_records
-}
-
 output "metabase_service_account_email" {
   description = "The email address of the Metabase Cloud Run runtime service account."
   value       = module.iam.metabase_service_account_email

@@ -16,7 +16,7 @@ Refer to [docs/explanation/architecture.md](docs/explanation/architecture.md) fo
 | :----------------------- | :------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GCP Project**          | `data-warehouse-492522`                | Host project containing BigQuery analytics warehouse and infrastructure.                                                                       |
 | **GCP Region**           | `us-west1` (Oregon)                    | Optimal low-latency to California; standard Tier 1 GCP pricing (matches `us-central1` costs).                                                  |
-| **Domain & DNS**         | `dashboards.compiler.la` (Cloudflare)  | Free managed SSL certificates; CNAME pointing to Cloud Run; proxy/WAF protection.                                                              |
+| **Domain & Ingress**     | `*.run.app` (Cloud Run default)        | GCP-managed HTTPS via default Cloud Run domain; no custom domain or DNS configuration required.                                                  |
 | **Container Runtime**    | **GCP Cloud Run**                      | Zero Kubernetes overhead; fully managed container lifecycle; integrated Cloud SQL proxy; native HTTPS.                                         |
 | **Instance Policy**      | **Min Instances: 1**                   | Prevents cold-start delays and ensures Metabase background syncs, alerts, and scheduled pulses run continuously.                               |
 | **Application Database** | **Cloud SQL PostgreSQL**               | Production-ready state store for Metabase (dashboards, queries, users, permissions). Never use the default embedded H2 database in production. |
@@ -52,7 +52,6 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
   - `MB_DB_PASS`: Secret reference from Secret Manager.
   - `MB_DB_HOST`: `/cloudsql/data-warehouse-492522:us-west1:metabase-db` (Unix domain socket).
   - `MB_ENCRYPTION_SECRET_KEY`: 32+ character key from Secret Manager (used to encrypt data source credentials stored in Metabase).
-  - `MB_SITE_URL`: `https://dashboards.compiler.la`
   - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 2 GiB container limit).
 
 ### 4.2 BigQuery Authentication
@@ -63,15 +62,7 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
   - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables).
   - `roles/cloudsql.client` (permits connecting to Cloud SQL via unix domain socket).
 
-### 4.3 Ingress & Cloudflare DNS
-
-1. In GCP Cloud Run, configure Custom Domain Mapping for `dashboards.compiler.la`.
-2. In Cloudflare DNS:
-   - Create a `CNAME` record: `dashboards` -> `ghs.googlehosted.com`.
-   - Proxy status: Proxied with Cloudflare SSL set to **Full (Strict)**.
-
 ---
-
 ## 5. Phased Implementation Roadmap
 
 1. **Phase 1: Dev Container & Local Development**:
@@ -79,9 +70,8 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
    - Verify Metabase runs locally on port 3000 backed by Postgres.
 2. **Phase 2: Terraform Infrastructure**:
    - Define Cloud SQL PostgreSQL, Secret Manager, IAM roles, and Cloud Run service in `us-west1`.
-3. **Phase 3: CI/CD & DNS**:
-   - Set up GitHub Actions with GCP Workload Identity Federation (WIF).
-   - Configure Cloudflare DNS CNAME for `dashboards.compiler.la`.
+3. **Phase 3: CI/CD**:
+    - Set up GitHub Actions with GCP Workload Identity Federation (WIF).
 4. **Phase 4: Metabase App Setup**:
    - Configure Google Workspace OAuth and SMTP relay.
    - Connect BigQuery datasets and establish permission groups.

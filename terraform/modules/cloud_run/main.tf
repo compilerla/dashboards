@@ -47,11 +47,6 @@ resource "google_cloud_run_v2_service" "metabase" {
           }
         }
       }
-      env {
-        name  = "MB_SITE_URL"
-        value = "https://${var.subdomain}.${var.domain_name}"
-      }
-
       resources {
         limits = {
           cpu    = var.cpu_limit
@@ -96,18 +91,4 @@ resource "google_cloud_run_v2_service_iam_member" "public_access" {
   project  = var.project_id
   role     = "roles/run.invoker"
   member   = "allUsers"
-}
-
-resource "google_cloud_run_domain_mapping" "custom_domain" {
-  location = var.region
-  name     = "${var.subdomain}.${var.domain_name}"
-  project  = var.project_id
-
-  metadata {
-    namespace = var.project_id
-  }
-  spec {
-    certificate_mode = "AUTOMATIC"
-    route_name       = var.service_name
-  }
 }

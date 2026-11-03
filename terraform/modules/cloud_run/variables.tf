@@ -1,13 +1,3 @@
-variable "subdomain" {
-  description = "The subdomain for the dashboard (e.g., 'dashboards')."
-  type        = string
-}
-
-variable "domain_name" {
-  description = "The base domain name (e.g., 'compiler.la')."
-  type        = string
-}
-
 variable "cloud_sql_connection_name" {
   description = "The Cloud SQL instance connection name (project:region:instance)."
   type        = string

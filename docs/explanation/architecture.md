@@ -9,7 +9,6 @@ flowchart TD
     subgraph Users & Ingress
         U_Internal["Internal Users (Google Workspace SSO)"]
         U_External["External Users (Username / Password)"]
-        CF["Cloudflare DNS & Proxy (dashboards.compiler.la)"]
     end
 
     subgraph Sources ["Source Systems"]
@@ -49,9 +48,8 @@ flowchart TD
         GW_SMTP["Google Workspace SMTP Relay<br/>(Invitations, Alerts, Password Resets)"]
     end
 
-    U_Internal --> CF
-    U_External --> CF
-    CF -->|HTTPS| MB
+    U_Internal --> MB
+    U_External --> MB
 
     Sources --> Workflows
     Workflows -->|Python Jobs| GCS
@@ -72,7 +70,7 @@ flowchart TD
 | :----------------------- | :------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GCP Project**          | `data-warehouse-492522`                | Host project containing BigQuery analytics warehouse and infrastructure.                                                                       |
 | **GCP Region**           | `us-west1` (Oregon)                    | Optimal low-latency to California; standard Tier 1 GCP pricing (matches `us-central1` costs).                                                  |
-| **Domain & DNS**         | `dashboards.compiler.la` (Cloudflare)  | Free managed SSL certificates; CNAME pointing to Cloud Run; proxy/WAF protection.                                                              |
+| **Domain & Ingress**     | `*.run.app` (Cloud Run default)        | GCP-managed HTTPS via default Cloud Run domain; no custom domain or DNS configuration required.                                                  |
 | **Container Runtime**    | **GCP Cloud Run**                      | Zero Kubernetes overhead; fully managed container lifecycle; integrated Cloud SQL proxy; native HTTPS.                                         |
 | **Instance Policy**      | **Min Instances: 1**                   | Prevents cold-start delays and ensures Metabase background syncs, alerts, and scheduled pulses run continuously.                               |
 | **Application Database** | **Cloud SQL PostgreSQL**               | Production-ready state store for Metabase (dashboards, queries, users, permissions). Never use the default embedded H2 database in production. |

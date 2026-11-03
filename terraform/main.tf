@@ -59,8 +59,6 @@ module "cloud_run" {
   source = "./modules/cloud_run"
 
   cloud_sql_connection_name       = module.database.connection_name
-  subdomain                       = var.subdomain
-  domain_name                     = var.domain_name
   database_name                   = module.database.database_name
   database_user                   = module.database.database_user
   db_password_secret_id           = module.secrets.db_password_secret_id
@@ -70,13 +68,4 @@ module "cloud_run" {
   service_account_email           = module.iam.metabase_service_account_email
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]
-}
-
-module "cloudflare" {
-  source        = "./modules/cloudflare"
-  zone_id       = var.cloudflare_zone_id
-  subdomain     = var.subdomain
-  domain_name   = var.domain_name
-  proxy_enabled = true
-  depends_on    = [module.cloud_run]
 }

@@ -1,8 +1,0 @@
-# Project and Region
-project_id    = "data-warehouse-492522"
-region        = "us-west1"
-
-# Domain Configuration
-domain_name   = "compiler.la"
-subdomain     = "dashboards"
-cloudflare_zone_id = "YOUR_ZONE_ID"
