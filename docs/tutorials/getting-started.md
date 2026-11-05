@@ -28,5 +28,5 @@ This repository follows Compiler's cross-platform [Dev Containers](https://code.
 3. When prompted, click **"Reopen in Container"** (or press `F1` / `Ctrl+Shift+P` / `Cmd+Shift+P` and run `Dev Containers: Reopen in Container`).
 4. VS Code will build the dev container and launch all three services:
    - **`dev`**: Your development shell containing `terraform`, `gcloud`, `pre-commit`, and Postgres client tools.
-   - **`postgres`**: Local PostgreSQL 16 database storing Metabase application state.
+   - **`postgres`**: Local PostgreSQL 18 database storing Metabase application state.
    - **`metabase`**: Official Metabase application available at [http://localhost:3000](http://localhost:3000).
