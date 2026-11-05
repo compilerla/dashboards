@@ -31,6 +31,9 @@ jobs:
       is_tag: ${{ steps.set-env.outputs.is_tag }}
       is_release: ${{ steps.set-env.outputs.is_release }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v7.0.1
+
       - id: set-env
         run: |
           # 1. Determine if it's a tag
