@@ -102,6 +102,7 @@ jobs:
           planfile: tfplan
           token: ${{ github.token }}
           skip-comment: true
+          working-directory: terraform
 
   release:
     needs: [terraform-apply]
