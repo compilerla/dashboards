@@ -25,19 +25,7 @@ variable "database_user" {
   type        = string
 }
 
-variable "encryption_secret_key" {
-  default     = ""
-  description = "Optional pre-defined 32+ character Metabase encryption key. If left empty, a secure random key is generated."
-  sensitive   = true
-  type        = string
-}
 
-variable "session_secret_key" {
-  default     = ""
-  description = "Optional pre-defined 32 character Metabase session secret key. If left empty, a secure random key is generated."
-  sensitive   = true
-  type        = string
-}
 
 variable "java_opts" {
   default     = "-Xmx1536m -Xms512m -XX:+UseG1GC"

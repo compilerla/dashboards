@@ -1,24 +1,3 @@
-variable "db_password" {
-  default     = ""
-  description = "Optional pre-defined PostgreSQL password. If left empty, a secure random password is generated."
-  sensitive   = true
-  type        = string
-}
-
-variable "metabase_encryption_secret_key" {
-  default     = ""
-  description = "Optional pre-defined 32+ character Metabase encryption key. If left empty, a secure random key is generated."
-  sensitive   = true
-  type        = string
-}
-
-variable "metabase_secret_key" {
-  default     = ""
-  description = "Optional pre-defined 48 character Metabase secret key for app-level session and token signing. If left empty, a secure random key is generated."
-  sensitive   = true
-  type        = string
-}
-
 variable "google_client_secret" {
   default     = ""
   description = "Google Workspace OAuth Client Secret for Metabase authentication."

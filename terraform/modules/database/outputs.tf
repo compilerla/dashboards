@@ -8,6 +8,11 @@ output "database_name" {
   value       = google_sql_database.metabase.name
 }
 
+output "database_password_secret_id" {
+  description = "The Secret Manager secret ID for the database password."
+  value       = google_secret_manager_secret.database_password.secret_id
+}
+
 output "database_user" {
   description = "The username for the Metabase database user."
   value       = google_sql_user.metabase.name

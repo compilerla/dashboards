@@ -4,11 +4,6 @@ variable "database_name" {
   type        = string
 }
 
-variable "database_password" {
-  description = "The password for the Metabase PostgreSQL user."
-  sensitive   = true
-  type        = string
-}
 
 variable "database_tier" {
   default     = "db-perf-optimized-N-2"
