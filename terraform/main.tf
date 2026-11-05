@@ -17,6 +17,8 @@ module "wif" {
 
   project_id         = var.project_id
   service_account_id = module.iam.github_actions_service_account_id
+  pool_id            = "github-actions-pool-01"
+  provider_id        = "github-actions-provider-01"
 
   depends_on = [module.iam]
 }
