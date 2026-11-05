@@ -20,6 +20,17 @@ output "metabase_encryption_secret_key_secret_id" {
   value       = google_secret_manager_secret.metabase_encryption_key.secret_id
 }
 
+output "metabase_secret_key" {
+  description = "The resolved Metabase secret key value (app-level session/token signing)."
+  sensitive   = true
+  value       = local.resolved_metabase_secret_key
+}
+
+output "metabase_secret_key_secret_id" {
+  description = "The Secret Manager secret ID for the Metabase secret key."
+  value       = google_secret_manager_secret.metabase_secret_key.secret_id
+}
+
 output "metabase_google_client_secret_id" {
   description = "The Secret Manager secret ID for Google OAuth client secret, if created."
   value       = try(google_secret_manager_secret.google_client_secret[0].secret_id, null)

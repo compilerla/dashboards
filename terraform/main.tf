@@ -67,6 +67,7 @@ module "metabase" {
   encryption_secret_key_secret_id = module.secrets.metabase_encryption_secret_key_secret_id
   project_id                      = var.project_id
   region                          = var.region
+  secret_key_secret_id            = module.secrets.metabase_secret_key_secret_id
   service_account_email           = module.iam.metabase_service_account_email
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]

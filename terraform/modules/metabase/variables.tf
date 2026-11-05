@@ -25,13 +25,17 @@ variable "database_user" {
   type        = string
 }
 
-variable "db_password_secret_id" {
-  description = "Secret Manager secret ID containing the database password."
+variable "encryption_secret_key" {
+  default     = ""
+  description = "Optional pre-defined 32+ character Metabase encryption key. If left empty, a secure random key is generated."
+  sensitive   = true
   type        = string
 }
 
-variable "encryption_secret_key_secret_id" {
-  description = "Secret Manager secret ID containing the Metabase encryption secret key."
+variable "session_secret_key" {
+  default     = ""
+  description = "Optional pre-defined 32 character Metabase session secret key. If left empty, a secure random key is generated."
+  sensitive   = true
   type        = string
 }
 

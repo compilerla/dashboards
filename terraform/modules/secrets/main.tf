@@ -8,9 +8,15 @@ resource "random_password" "metabase_encryption_secret_key" {
   special = false
 }
 
+resource "random_password" "metabase_secret_key" {
+  length  = 48
+  special = true
+}
+
 locals {
   resolved_db_password             = var.db_password != "" ? var.db_password : random_password.db_password.result
   resolved_metabase_encryption_key = var.metabase_encryption_secret_key != "" ? var.metabase_encryption_secret_key : random_password.metabase_encryption_secret_key.result
+  resolved_metabase_secret_key     = var.metabase_secret_key != "" ? var.metabase_secret_key : random_password.metabase_secret_key.result
 }
 
 # Database Password Secret
@@ -41,6 +47,21 @@ resource "google_secret_manager_secret" "metabase_encryption_key" {
 resource "google_secret_manager_secret_version" "metabase_encryption_key" {
   secret      = google_secret_manager_secret.metabase_encryption_key.id
   secret_data = local.resolved_metabase_encryption_key
+}
+
+# Metabase Secret Key (app-level session/token signing)
+resource "google_secret_manager_secret" "metabase_secret_key" {
+  project   = var.project_id
+  secret_id = "metabase-secret-key"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "metabase_secret_key" {
+  secret      = google_secret_manager_secret.metabase_secret_key.id
+  secret_data = local.resolved_metabase_secret_key
 }
 
 # Google OAuth Client Secret (Conditional)

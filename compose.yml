@@ -30,7 +30,7 @@ services:
     volumes:
       - "./:/home/compiler/src"
   metabase:
-    image: "metabase/metabase:v0.65.x"
+    image: "metabase/metabase:v0.65.2"
     container_name: "metabase"
     ports:
       - "3000:3000"
