@@ -4,7 +4,7 @@ variable "cloud_sql_connection_name" {
 }
 
 variable "container_image" {
-  default     = "metabase/metabase:v0.65.x"
+  default     = "metabase/metabase:v0.65.2"
   description = "Docker image tag for Metabase."
   type        = string
 }
@@ -48,7 +48,7 @@ variable "max_instances" {
 }
 
 variable "memory_limit" {
-  default     = "2Gi"
+  default     = "4Gi"
   description = "Memory limit for the Cloud Run container."
   type        = string
 }
