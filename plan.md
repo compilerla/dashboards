@@ -42,25 +42,33 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
 
 ### 4.1 Cloud Run Sizing & Environment Variables
 
-- **CPU & Memory**: 1 vCPU, 2 GiB RAM (can scale to 2 vCPU / 4 GiB if user concurrency grows).
+- **CPU & Memory**: 1 vCPU, 4 GiB RAM (can scale to 2 vCPU / 4 GiB if user concurrency grows).
 - **Scaling Rules**: `min_instances = 1`, `max_instances = 3`.
 - **Container Concurrency**: 80 concurrent requests.
 - **Essential Environment Variables**:
-  - `MB_DB_TYPE`: `postgres`
-  - `MB_DB_DBNAME`: `metabase`
+  - `MB_DB_URI`: `jdbc:postgresql:////cloudsql/<project>:<region>:<instance>/<database>` (Unix domain socket via Cloud SQL socket).
   - `MB_DB_USER`: `metabase`
   - `MB_DB_PASS`: Secret reference from Secret Manager.
-  - `MB_DB_HOST`: `/cloudsql/data-warehouse-492522:us-west1:metabase-db` (Unix domain socket).
   - `MB_ENCRYPTION_SECRET_KEY`: 32+ character key from Secret Manager (used to encrypt data source credentials stored in Metabase).
-  - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 2 GiB container limit).
+  - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 4 GiB container limit).
 
 ### 4.2 BigQuery Authentication
 
 - Dedicated Service Account: `metabase-runner@data-warehouse-492522.iam.gserviceaccount.com`.
 - IAM roles granted:
   - `roles/bigquery.jobUser` (permits executing queries).
-  - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables).
+  - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables, granted at dataset level).
   - `roles/cloudsql.client` (permits connecting to Cloud SQL via unix domain socket).
+  - `roles/secretmanager.secretAccessor` (permits reading secrets from Secret Manager).
+
+### 4.3 Workload Identity Federation (WIF)
+
+- **Pool**: `github-actions-pool`
+- **Provider**: `github-actions-provider`
+- **OIDC Issuer**: `https://token.actions.githubusercontent.com`
+- **Condition**: `assertion.repository == 'compilerla/dashboards'`
+- **Binding**: `github-actions-runner` service account granted `roles/iam.workloadIdentityUser` via the WIF pool
+- **Purpose**: Allows GitHub Actions to assume the `github-actions-runner` service account without using long-lived service account keys.
 
 ---
 ## 5. Phased Implementation Roadmap
