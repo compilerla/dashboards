@@ -47,6 +47,15 @@ resource "google_cloud_run_v2_service" "metabase" {
           }
         }
       }
+      env {
+        name = "MB_SESSION_SECRET_KEY"
+        value_source {
+          secret_key_ref {
+            secret  = "metabase-encryption-secret-key"
+            version = "latest"
+          }
+        }
+      }
       resources {
         limits = {
           cpu    = var.cpu_limit
