@@ -1,3 +1,7 @@
+locals {
+  region_suffix = replace(var.region, "-", "_")
+}
+
 resource "google_cloud_run_v2_service" "metabase" {
   name        = var.service_name
   location    = var.region
@@ -14,12 +18,8 @@ resource "google_cloud_run_v2_service" "metabase" {
         value = var.java_opts
       }
       env {
-        name  = "MB_DB_DBNAME"
-        value = var.database_name
-      }
-      env {
-        name  = "MB_DB_HOST"
-        value = "/cloudsql/data-warehouse-492522:us-west1:metabase-db"
+        name  = "MB_DB_URI"
+        value = "jdbc:postgresql:////cloudsql/${var.cloud_sql_connection_name}/${var.database_name}"
       }
       env {
         name = "MB_DB_PASS"
@@ -29,10 +29,6 @@ resource "google_cloud_run_v2_service" "metabase" {
             version = "latest"
           }
         }
-      }
-      env {
-        name  = "MB_DB_TYPE"
-        value = "postgres"
       }
       env {
         name  = "MB_DB_USER"
@@ -48,15 +44,34 @@ resource "google_cloud_run_v2_service" "metabase" {
         }
       }
       env {
-        name  = "MB_SITE_URL"
-        value = "https://${var.subdomain}.${var.domain_name}"
+        name = "MB_SESSION_SECRET_KEY"
+        value_source {
+          secret_key_ref {
+            secret  = "metabase-encryption-secret-key"
+            version = "latest"
+          }
+        }
       }
-
+      env {
+        name  = "MB_SITE_URL"
+        value = "https://${var.service_name}.${local.region_suffix}.a.run.app"
+      }
       resources {
         limits = {
           cpu    = var.cpu_limit
           memory = var.memory_limit
         }
+      }
+
+      startup_probe {
+        http_get {
+          path = "/api/health"
+          port = 3000
+        }
+        initial_delay_seconds = 30
+        period_seconds        = 10
+        timeout_seconds       = 5
+        failure_threshold     = 60
       }
 
       volume_mounts {
@@ -85,16 +100,4 @@ resource "google_cloud_run_v2_service_iam_member" "public_access" {
   project  = var.project_id
   role     = "roles/run.invoker"
   member   = "allUsers"
-}
-
-resource "google_cloud_run_domain_mapping" "custom_domain" {
-  count    = var.custom_domain_enabled ? 1 : 0
-  location = var.region
-  name     = "${var.subdomain}.${var.domain_name}"
-  project  = var.project_id
-
-  spec {
-    certificate_mode = "AUTOMATIC"
-    route_name       = var.service_name
-  }
 }

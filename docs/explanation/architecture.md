@@ -9,7 +9,6 @@ flowchart TD
     subgraph Users & Ingress
         U_Internal["Internal Users (Google Workspace SSO)"]
         U_External["External Users (Username / Password)"]
-        CF["Cloudflare DNS & Proxy (dashboards.compiler.la)"]
     end
 
     subgraph Sources ["Source Systems"]
@@ -32,7 +31,7 @@ flowchart TD
         end
 
         subgraph CloudRun ["Application Runtime"]
-            MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
+            MB["Metabase OSS Container<br/>(metabase/metabase:v0.65.2)<br/>Min Instances: 1 | 4 GiB RAM"]
         end
 
         subgraph Storage_State ["Application State & Secrets"]
@@ -41,7 +40,9 @@ flowchart TD
         end
 
         subgraph IAM_Service ["Security & Identity"]
-            SA["Cloud Run Service Account<br/>(roles/bigquery.jobUser<br/>roles/bigquery.dataViewer)"]
+            MB_SA["metabase-runner SA<br/>(roles/bigquery.jobUser<br/>roles/cloudsql.client<br/>roles/secretmanager.secretAccessor)"]
+            GH_SA["github-actions-runner SA<br/>(roles/editor<br/>roles/resourcemanager.projectIamAdmin<br/>roles/iam.serviceAccountTokenCreator)"]
+            WIF["Workload Identity Federation<br/>(github-actions-pool / github-actions-provider)"]
         end
     end
 
@@ -49,9 +50,8 @@ flowchart TD
         GW_SMTP["Google Workspace SMTP Relay<br/>(Invitations, Alerts, Password Resets)"]
     end
 
-    U_Internal --> CF
-    U_External --> CF
-    CF -->|HTTPS| MB
+    U_Internal --> MB
+    U_External --> MB
 
     Sources --> Workflows
     Workflows -->|Python Jobs| GCS
@@ -72,7 +72,7 @@ flowchart TD
 | :----------------------- | :------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GCP Project**          | `data-warehouse-492522`                | Host project containing BigQuery analytics warehouse and infrastructure.                                                                       |
 | **GCP Region**           | `us-west1` (Oregon)                    | Optimal low-latency to California; standard Tier 1 GCP pricing (matches `us-central1` costs).                                                  |
-| **Domain & DNS**         | `dashboards.compiler.la` (Cloudflare)  | Free managed SSL certificates; CNAME pointing to Cloud Run; proxy/WAF protection.                                                              |
+| **Domain & Ingress**     | `*.run.app` (Cloud Run default)        | GCP-managed HTTPS via default Cloud Run domain; no custom domain or DNS configuration required.                                                  |
 | **Container Runtime**    | **GCP Cloud Run**                      | Zero Kubernetes overhead; fully managed container lifecycle; integrated Cloud SQL proxy; native HTTPS.                                         |
 | **Instance Policy**      | **Min Instances: 1**                   | Prevents cold-start delays and ensures Metabase background syncs, alerts, and scheduled pulses run continuously.                               |
 | **Application Database** | **Cloud SQL PostgreSQL**               | Production-ready state store for Metabase (dashboards, queries, users, permissions). Never use the default embedded H2 database in production. |

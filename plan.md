@@ -16,7 +16,7 @@ Refer to [docs/explanation/architecture.md](docs/explanation/architecture.md) fo
 | :----------------------- | :------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GCP Project**          | `data-warehouse-492522`                | Host project containing BigQuery analytics warehouse and infrastructure.                                                                       |
 | **GCP Region**           | `us-west1` (Oregon)                    | Optimal low-latency to California; standard Tier 1 GCP pricing (matches `us-central1` costs).                                                  |
-| **Domain & DNS**         | `dashboards.compiler.la` (Cloudflare)  | Free managed SSL certificates; CNAME pointing to Cloud Run; proxy/WAF protection.                                                              |
+| **Domain & Ingress**     | `*.run.app` (Cloud Run default)        | GCP-managed HTTPS via default Cloud Run domain; no custom domain or DNS configuration required.                                                  |
 | **Container Runtime**    | **GCP Cloud Run**                      | Zero Kubernetes overhead; fully managed container lifecycle; integrated Cloud SQL proxy; native HTTPS.                                         |
 | **Instance Policy**      | **Min Instances: 1**                   | Prevents cold-start delays and ensures Metabase background syncs, alerts, and scheduled pulses run continuously.                               |
 | **Application Database** | **Cloud SQL PostgreSQL**               | Production-ready state store for Metabase (dashboards, queries, users, permissions). Never use the default embedded H2 database in production. |
@@ -38,63 +38,48 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
 
 ---
 
-## 4. Phase 1: Dev Container & Local Development
+## 4. Production Configuration Details
 
-Following the `compilerla` pattern:
+### 4.1 Cloud Run Sizing & Environment Variables
 
-- **`compose.yml`** orchestrates three services:
-  1. `dev`: VS Code developer container mounting the repository at `/home/compiler/src`, running as user `compiler`.
-  2. `metabase`: Official Metabase Docker container connected to local Postgres.
-  3. `postgres`: PostgreSQL 16 backing Metabase application state.
-- **`.devcontainer/devcontainer.json`** configures VS Code extensions (`hashicorp.terraform`, `gitlens`, `prettier`, etc.) and sets the default terminal profile.
-- **`.devcontainer/Dockerfile`** installs developer tools: Terraform/OpenTofu, Google Cloud CLI (`gcloud`), `pre-commit`, and Postgres client utilities.
-
----
-
-## 5. Production Configuration Details
-
-### 5.1 Cloud Run Sizing & Environment Variables
-
-- **CPU & Memory**: 1 vCPU, 2 GiB RAM (can scale to 2 vCPU / 4 GiB if user concurrency grows).
+- **CPU & Memory**: 1 vCPU, 4 GiB RAM (can scale to 2 vCPU / 4 GiB if user concurrency grows).
 - **Scaling Rules**: `min_instances = 1`, `max_instances = 3`.
 - **Container Concurrency**: 80 concurrent requests.
 - **Essential Environment Variables**:
-  - `MB_DB_TYPE`: `postgres`
-  - `MB_DB_DBNAME`: `metabase`
+  - `MB_DB_URI`: `jdbc:postgresql:////cloudsql/<project>:<region>:<instance>/<database>` (Unix domain socket via Cloud SQL socket).
   - `MB_DB_USER`: `metabase`
   - `MB_DB_PASS`: Secret reference from Secret Manager.
-  - `MB_DB_HOST`: `/cloudsql/data-warehouse-492522:us-west1:metabase-db` (Unix domain socket).
   - `MB_ENCRYPTION_SECRET_KEY`: 32+ character key from Secret Manager (used to encrypt data source credentials stored in Metabase).
-  - `MB_SITE_URL`: `https://dashboards.compiler.la`
-  - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 2 GiB container limit).
+  - `JAVA_OPTS`: `"-Xmx1536m -Xms512m -XX:+UseG1GC"` (Allocates appropriate JVM heap within the 4 GiB container limit).
 
-### 5.2 BigQuery Authentication
+### 4.2 BigQuery Authentication
 
 - Dedicated Service Account: `metabase-runner@data-warehouse-492522.iam.gserviceaccount.com`.
 - IAM roles granted:
   - `roles/bigquery.jobUser` (permits executing queries).
-  - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables).
+  - `roles/bigquery.dataViewer` (permits reading analytical datasets/tables, granted at dataset level).
   - `roles/cloudsql.client` (permits connecting to Cloud SQL via unix domain socket).
+  - `roles/secretmanager.secretAccessor` (permits reading secrets from Secret Manager).
 
-### 5.3 Ingress & Cloudflare DNS
+### 4.3 Workload Identity Federation (WIF)
 
-1. In GCP Cloud Run, configure Custom Domain Mapping for `dashboards.compiler.la`.
-2. In Cloudflare DNS:
-   - Create a `CNAME` record: `dashboards` -> `ghs.googlehosted.com`.
-   - Proxy status: Proxied with Cloudflare SSL set to **Full (Strict)**.
+- **Pool**: `github-actions-pool`
+- **Provider**: `github-actions-provider`
+- **OIDC Issuer**: `https://token.actions.githubusercontent.com`
+- **Condition**: `assertion.repository == 'compilerla/dashboards'`
+- **Binding**: `github-actions-runner` service account granted `roles/iam.workloadIdentityUser` via the WIF pool
+- **Purpose**: Allows GitHub Actions to assume the `github-actions-runner` service account without using long-lived service account keys.
 
 ---
-
-## 6. Phased Implementation Roadmap
+## 5. Phased Implementation Roadmap
 
 1. **Phase 1: Dev Container & Local Development**:
    - Set up `.devcontainer/devcontainer.json`, `.devcontainer/Dockerfile`, `compose.yml`, and `.env.example`.
    - Verify Metabase runs locally on port 3000 backed by Postgres.
 2. **Phase 2: Terraform Infrastructure**:
    - Define Cloud SQL PostgreSQL, Secret Manager, IAM roles, and Cloud Run service in `us-west1`.
-3. **Phase 3: CI/CD & DNS**:
-   - Set up GitHub Actions with GCP Workload Identity Federation (WIF).
-   - Configure Cloudflare DNS CNAME for `dashboards.compiler.la`.
+3. **Phase 3: CI/CD**:
+    - Set up GitHub Actions with GCP Workload Identity Federation (WIF).
 4. **Phase 4: Metabase App Setup**:
    - Configure Google Workspace OAuth and SMTP relay.
    - Connect BigQuery datasets and establish permission groups.

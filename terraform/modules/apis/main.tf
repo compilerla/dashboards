@@ -7,6 +7,7 @@ locals {
     "secretmanager.googleapis.com",
     "sqladmin.googleapis.com",
     "sql-component.googleapis.com",
+    "storage.googleapis.com",
     "vpcaccess.googleapis.com",
   ]
 }

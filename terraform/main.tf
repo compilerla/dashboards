@@ -12,10 +12,21 @@ module "iam" {
   depends_on = [module.apis]
 }
 
+module "wif" {
+  source = "./modules/wif"
+
+  project_id         = var.project_id
+  service_account_id = module.iam.github_actions_service_account_id
+  pool_id            = "github-actions-pool-01"
+  provider_id        = "github-actions-provider-01"
+
+  depends_on = [module.iam]
+}
+
 module "bigquery" {
   source = "./modules/bigquery"
 
-  metabase_service_account_email = module.iam.service_account_email
+  metabase_service_account_email = module.iam.metabase_service_account_email
   project_id                     = var.project_id
 
   depends_on = [module.apis, module.iam]
@@ -46,28 +57,17 @@ module "storage" {
   location   = var.region
 }
 
-module "cloud_run" {
-  source = "./modules/cloud_run"
+module "metabase" {
+  source = "./modules/metabase"
 
   cloud_sql_connection_name       = module.database.connection_name
-  subdomain                       = var.subdomain
-  domain_name                     = var.domain_name
   database_name                   = module.database.database_name
   database_user                   = module.database.database_user
   db_password_secret_id           = module.secrets.db_password_secret_id
-  encryption_secret_key_secret_id = module.secrets.encryption_secret_key_secret_id
+  encryption_secret_key_secret_id = module.secrets.metabase_encryption_secret_key_secret_id
   project_id                      = var.project_id
   region                          = var.region
-  service_account_email           = module.iam.service_account_email
+  service_account_email           = module.iam.metabase_service_account_email
 
   depends_on = [module.apis, module.iam, module.secrets, module.database]
-}
-
-module "cloudflare" {
-  source        = "./modules/cloudflare"
-  zone_id       = var.cloudflare_zone_id
-  subdomain     = var.subdomain
-  domain_name   = var.domain_name
-  proxy_enabled = true
-  depends_on    = [module.cloud_run]
 }

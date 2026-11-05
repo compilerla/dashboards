@@ -1,26 +1,10 @@
-variable "subdomain" {
-  description = "The subdomain for the dashboard (e.g., 'dashboards')."
-  type        = string
-}
-
-variable "domain_name" {
-  description = "The base domain name (e.g., 'compiler.la')."
-  type        = string
-}
-
-variable "custom_domain_enabled" {
-  description = "Whether to enable custom domain mapping. Set to false to skip."
-  type        = bool
-  default     = true
-}
-
 variable "cloud_sql_connection_name" {
   description = "The Cloud SQL instance connection name (project:region:instance)."
   type        = string
 }
 
 variable "container_image" {
-  default     = "metabase/metabase:v0.65.x"
+  default     = "metabase/metabase:v0.65.2"
   description = "Docker image tag for Metabase."
   type        = string
 }
@@ -64,7 +48,7 @@ variable "max_instances" {
 }
 
 variable "memory_limit" {
-  default     = "2Gi"
+  default     = "4Gi"
   description = "Memory limit for the Cloud Run container."
   type        = string
 }

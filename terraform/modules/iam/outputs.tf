@@ -1,9 +1,7 @@
-output "service_account_email" {
-  description = "The email address of the Metabase Cloud Run service account."
-  value       = google_service_account.metabase.email
+output "github_actions_service_account_id" {
+  value = google_service_account.github_actions.id
 }
 
-output "service_account_id" {
-  description = "The fully qualified ID of the Metabase Cloud Run service account."
-  value       = google_service_account.metabase.id
+output "metabase_service_account_email" {
+  value = google_service_account.metabase.email
 }
