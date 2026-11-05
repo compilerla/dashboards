@@ -18,12 +18,8 @@ resource "google_cloud_run_v2_service" "metabase" {
         value = var.java_opts
       }
       env {
-        name  = "MB_DB_DBNAME"
-        value = var.database_name
-      }
-      env {
-        name  = "MB_DB_HOST"
-        value = "/cloudsql/${var.cloud_sql_connection_name}"
+        name  = "MB_DB_URI"
+        value = "jdbc:postgresql:////cloudsql/${var.cloud_sql_connection_name}/${var.database_name}"
       }
       env {
         name = "MB_DB_PASS"
