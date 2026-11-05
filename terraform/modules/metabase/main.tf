@@ -1,3 +1,7 @@
+locals {
+  region_suffix = replace(var.region, "-", "_")
+}
+
 resource "google_cloud_run_v2_service" "metabase" {
   name        = var.service_name
   location    = var.region
@@ -19,7 +23,7 @@ resource "google_cloud_run_v2_service" "metabase" {
       }
       env {
         name  = "MB_DB_HOST"
-        value = "/cloudsql/data-warehouse-492522:us-west1:metabase-db"
+        value = "/cloudsql/${var.cloud_sql_connection_name}"
       }
       env {
         name = "MB_DB_PASS"
@@ -29,10 +33,6 @@ resource "google_cloud_run_v2_service" "metabase" {
             version = "latest"
           }
         }
-      }
-      env {
-        name  = "MB_DB_TYPE"
-        value = "postgres"
       }
       env {
         name  = "MB_DB_USER"
@@ -56,6 +56,10 @@ resource "google_cloud_run_v2_service" "metabase" {
           }
         }
       }
+      env {
+        name  = "MB_SITE_URL"
+        value = "https://${var.service_name}.${local.region_suffix}.a.run.app"
+      }
       resources {
         limits = {
           cpu    = var.cpu_limit
@@ -66,7 +70,7 @@ resource "google_cloud_run_v2_service" "metabase" {
       startup_probe {
         http_get {
           path = "/api/health"
-          port = 8080
+          port = 3000
         }
         initial_delay_seconds = 30
         period_seconds        = 10

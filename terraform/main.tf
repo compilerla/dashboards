@@ -55,8 +55,8 @@ module "storage" {
   location   = var.region
 }
 
-module "cloud_run" {
-  source = "./modules/cloud_run"
+module "metabase" {
+  source = "./modules/metabase"
 
   cloud_sql_connection_name       = module.database.connection_name
   database_name                   = module.database.database_name
