@@ -31,7 +31,7 @@ flowchart TD
         end
 
         subgraph CloudRun ["Application Runtime"]
-            MB["Metabase OSS Container<br/>(metabase/metabase:vX.Y.Z)<br/>Min Instances: 1 | 2 GiB RAM"]
+            MB["Metabase OSS Container<br/>(metabase/metabase:v0.65.2)<br/>Min Instances: 1 | 4 GiB RAM"]
         end
 
         subgraph Storage_State ["Application State & Secrets"]
@@ -40,7 +40,9 @@ flowchart TD
         end
 
         subgraph IAM_Service ["Security & Identity"]
-            SA["Cloud Run Service Account<br/>(roles/bigquery.jobUser<br/>roles/bigquery.dataViewer)"]
+            MB_SA["metabase-runner SA<br/>(roles/bigquery.jobUser<br/>roles/cloudsql.client<br/>roles/secretmanager.secretAccessor)"]
+            GH_SA["github-actions-runner SA<br/>(roles/editor<br/>roles/resourcemanager.projectIamAdmin<br/>roles/iam.serviceAccountTokenCreator)"]
+            WIF["Workload Identity Federation<br/>(github-actions-pool / github-actions-provider)"]
         end
     end
 

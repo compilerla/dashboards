@@ -4,14 +4,14 @@ This page provides an initial monthly pricing estimate for the production enviro
 
 ## Monthly Estimated Cost Breakdown
 
-| Resource                     | Configuration                   | Estimated Monthly Cost |
-| :--------------------------- | :------------------------------ | :--------------------- |
-| **Cloud SQL (PostgreSQL)**   | 1 vCPU, 3.75 GB RAM, 100 GB SSD | $60 - $90              |
-| **Cloud Run (Metabase/dbt)** | Min instances = 1, Low volume   | $10 - $30              |
-| **Cloud Workflows**          | Serverless orchestration        | $1 - $5                |
-| **BigQuery**                 | Minimal ingestion & storage     | $0 - $5                |
-| **GCS Storage**              | < 1 GB total                    | $0 - $1                |
-| **Total Estimated Monthly**  |                                 | **$71 - $131**         |
+| Resource                     | Configuration                 | Estimated Monthly Cost |
+| :--------------------------- | :---------------------------- | :--------------------- |
+| **Cloud SQL (PostgreSQL)**   | 2 vCPU, 7.5 GB RAM, 10 GB SSD | $60 - $90              |
+| **Cloud Run (Metabase/dbt)** | Min instances = 1, Low volume | $10 - $30              |
+| **Cloud Workflows**          | Serverless orchestration      | $1 - $5                |
+| **BigQuery**                 | Minimal ingestion & storage   | $0 - $5                |
+| **GCS Storage**              | < 1 GB total                  | $0 - $1                |
+| **Total Estimated Monthly**  |                               | **$71 - $131**         |
 
 ## Key Assumptions & Notes
 
