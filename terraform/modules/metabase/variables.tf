@@ -25,15 +25,7 @@ variable "database_user" {
   type        = string
 }
 
-variable "db_password_secret_id" {
-  description = "Secret Manager secret ID containing the database password."
-  type        = string
-}
 
-variable "encryption_secret_key_secret_id" {
-  description = "Secret Manager secret ID containing the Metabase encryption secret key."
-  type        = string
-}
 
 variable "java_opts" {
   default     = "-Xmx1536m -Xms512m -XX:+UseG1GC"

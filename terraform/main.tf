@@ -43,9 +43,8 @@ module "secrets" {
 module "database" {
   source = "./modules/database"
 
-  database_password = module.secrets.db_password
-  project_id        = var.project_id
-  region            = var.region
+  project_id = var.project_id
+  region     = var.region
 
   depends_on = [module.apis]
 }
@@ -60,14 +59,12 @@ module "storage" {
 module "metabase" {
   source = "./modules/metabase"
 
-  cloud_sql_connection_name       = module.database.connection_name
-  database_name                   = module.database.database_name
-  database_user                   = module.database.database_user
-  db_password_secret_id           = module.secrets.db_password_secret_id
-  encryption_secret_key_secret_id = module.secrets.metabase_encryption_secret_key_secret_id
-  project_id                      = var.project_id
-  region                          = var.region
-  service_account_email           = module.iam.metabase_service_account_email
+  cloud_sql_connection_name = module.database.connection_name
+  database_name             = module.database.database_name
+  database_user             = module.database.database_user
+  project_id                = var.project_id
+  region                    = var.region
+  service_account_email     = module.iam.metabase_service_account_email
 
-  depends_on = [module.apis, module.iam, module.secrets, module.database]
+  depends_on = [module.apis, module.iam, module.database]
 }

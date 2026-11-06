@@ -38,6 +38,6 @@ resource "google_sql_database" "metabase" {
 resource "google_sql_user" "metabase" {
   instance = google_sql_database_instance.postgres.name
   name     = var.database_user
-  password = var.database_password
+  password = random_password.database_password.result
   project  = var.project_id
 }
