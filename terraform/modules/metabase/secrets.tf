@@ -38,21 +38,6 @@ resource "google_secret_manager_secret_version" "metabase_session_key" {
   secret_data = random_password.metabase_session_secret_key.result
 }
 
-# Google OAuth Client Secret
-resource "google_secret_manager_secret" "google_client_secret" {
-  project   = var.project_id
-  secret_id = "metabase-google-client-secret"
-
-  replication {
-    auto {}
-  }
-}
-
-resource "google_secret_manager_secret_version" "google_client_secret" {
-  secret      = google_secret_manager_secret.google_client_secret.id
-  secret_data = var.google_client_secret
-}
-
 # SMTP Password Secret
 resource "google_secret_manager_secret" "smtp_password" {
   project   = var.project_id

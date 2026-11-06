@@ -59,6 +59,22 @@ resource "google_cloud_run_v2_service" "metabase" {
         name  = "MB_SITE_URL"
         value = "https://${var.service_name}.${local.region_suffix}.a.run.app"
       }
+      env {
+        name  = "MB_GOOGLE_AUTH_ENABLED"
+        value = "true"
+      }
+      env {
+        name  = "MB_GOOGLE_AUTH_CLIENT_ID"
+        value = var.google_client_id
+      }
+      env {
+        name  = "MB_GOOGLE_AUTH_AUTO_CREATE_ACCOUNTS_DOMAIN"
+        value = "compiler.la"
+      }
+      env {
+        name  = "MB_ENABLE_PASSWORD_LOGIN"
+        value = "true"
+      }
       resources {
         limits = {
           cpu    = var.cpu_limit

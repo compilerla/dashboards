@@ -73,13 +73,7 @@ variable "service_name" {
 }
 
 variable "google_client_id" {
-  description = "Google OAuth 2.0 Client ID for Metabase SSO."
-  type        = string
-}
-
-variable "google_client_secret" {
-  description = "Google OAuth 2.0 Client Secret for Metabase authentication."
-  sensitive   = true
+  description = "Google OAuth 2.0 Client ID for Google Sign-In."
   type        = string
 }
 

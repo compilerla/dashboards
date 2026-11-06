@@ -67,6 +67,8 @@ jobs:
     # this convoluted syntax allows skipped and successful prerequisite runs and disallows failures
     if: (always() && !cancelled() && !failure())
     environment: ${{ needs.setup.outputs.env_name }}
+    env:
+      TF_VAR_google_client_id: ${{ secrets.GOOGLE_CLIENT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v7.0.1
