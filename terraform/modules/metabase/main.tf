@@ -13,6 +13,9 @@ resource "google_cloud_run_v2_service" "metabase" {
     service_account = var.service_account_email
     containers {
       image = var.container_image
+      ports {
+        container_port = 3000
+      }
       env {
         name  = "JAVA_OPTS"
         value = var.java_opts
