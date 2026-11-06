@@ -71,3 +71,21 @@ variable "service_name" {
   description = "Name of the Cloud Run service."
   type        = string
 }
+
+variable "google_client_id" {
+  description = "Google OAuth 2.0 Client ID for Metabase SSO."
+  type        = string
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth 2.0 Client Secret for Metabase authentication."
+  sensitive   = true
+  type        = string
+}
+
+variable "smtp_password" {
+  default     = ""
+  description = "Password for Google Workspace SMTP relay."
+  sensitive   = true
+  type        = string
+}
