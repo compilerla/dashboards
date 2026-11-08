@@ -20,6 +20,9 @@
 │   ├── guides/                      # How-to guides
 │   ├── reference/                   # Technical reference docs
 │   └── tutorials/                   # Step-by-step tutorials
+├── metabase/                        # Custom Metabase Docker image (Cloud SQL via socat)
+│   ├── Dockerfile                   # Adds socat, sets custom entrypoint
+│   └── entrypoint.sh                # Bridges Cloud SQL Unix socket → TCP 5432
 ├── plan.md                          # Full architectural design & implementation plan
 ├── terraform/                       # Infrastructure as Code (GCP Cloud Run & Cloud SQL)
 │   ├── modules/                     # Reusable Terraform modules

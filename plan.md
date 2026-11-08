@@ -46,7 +46,9 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
 - **Scaling Rules**: `min_instances = 1`, `max_instances = 3`.
 - **Container Concurrency**: 80 concurrent requests.
 - **Essential Environment Variables**:
-  - `MB_DB_URI`: `jdbc:postgresql:////cloudsql/<project>:<region>:<instance>/<database>` (Unix domain socket via Cloud SQL socket).
+  - `MB_DB_TYPE`: `postgres`
+  - `MB_DB_HOST`: `127.0.0.1` (socat bridges Cloud SQL Unix socket to TCP 5432)
+  - `MB_DB_DBNAME`: `metabase`
   - `MB_DB_USER`: `metabase`
   - `MB_DB_PASS`: Secret reference from Secret Manager.
   - `MB_ENCRYPTION_SECRET_KEY`: 32+ character key from Secret Manager (used to encrypt data source credentials stored in Metabase).

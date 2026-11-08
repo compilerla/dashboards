@@ -10,6 +10,12 @@ variable "region" {
   type        = string
 }
 
+
+variable "container_image" {
+  description = "Docker image tag for the Metabase Cloud Run service."
+  type        = string
+}
+
 variable "google_client_id" {
   description = "Google OAuth 2.0 Client ID for Google Sign-In."
   type        = string

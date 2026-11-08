@@ -52,6 +52,7 @@ module "metabase" {
   source = "./modules/metabase"
 
   cloud_sql_connection_name = module.database.connection_name
+  container_image           = var.container_image
   database_name             = module.database.database_name
   database_user             = module.database.database_user
   project_id                = var.project_id

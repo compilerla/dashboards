@@ -24,7 +24,9 @@ services:
     volumes:
       - "./:/home/compiler/src"
   metabase:
-    image: "metabase/metabase:v0.65.2"
+    build:
+      context: "./metabase"
+      dockerfile: "Dockerfile"
     container_name: "metabase"
     ports:
       - "3000:3000"

@@ -21,9 +21,30 @@ resource "google_cloud_run_v2_service" "metabase" {
         value = var.java_opts
       }
       env {
-        name  = "MB_DB_URI"
-        value = "jdbc:postgresql:////${var.cloud_sql_connection_name}/${var.database_name}"
+        name  = "CLOUD_SQL_INSTANCE_CONNECTION_NAME"
+        value = var.cloud_sql_connection_name
       }
+
+      env {
+        name  = "MB_DB_TYPE"
+        value = "postgres"
+      }
+
+      env {
+        name  = "MB_DB_DBNAME"
+        value = var.database_name
+      }
+
+      env {
+        name  = "MB_DB_HOST"
+        value = "127.0.0.1"
+      }
+
+      env {
+        name  = "MB_DB_USER"
+        value = var.database_user
+      }
+
       env {
         name = "MB_DB_PASS"
         value_source {
@@ -32,10 +53,6 @@ resource "google_cloud_run_v2_service" "metabase" {
             version = "latest"
           }
         }
-      }
-      env {
-        name  = "MB_DB_USER"
-        value = var.database_user
       }
       env {
         name = "MB_ENCRYPTION_SECRET_KEY"
