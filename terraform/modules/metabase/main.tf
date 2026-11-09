@@ -92,6 +92,31 @@ resource "google_cloud_run_v2_service" "metabase" {
         name  = "MB_ENABLE_PASSWORD_LOGIN"
         value = "true"
       }
+      env {
+        name  = "MB_EMAIL_SMTP_HOST"
+        value = "smtp.gmail.com"
+      }
+      env {
+        name  = "MB_EMAIL_SMTP_PORT"
+        value = "465"
+      }
+      env {
+        name  = "MB_EMAIL_SMTP_SECURITY"
+        value = "ssl"
+      }
+      env {
+        name  = "MB_EMAIL_SMTP_USERNAME"
+        value = "bot@compiler.la"
+      }
+      env {
+        name = "MB_EMAIL_SMTP_PASSWORD"
+        value_source {
+          secret_key_ref {
+            secret  = "metabase-smtp-password"
+            version = "latest"
+          }
+        }
+      }
       resources {
         limits = {
           cpu    = var.cpu_limit
