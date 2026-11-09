@@ -78,6 +78,7 @@ jobs:
       TF_VAR_metabase_image_tag: >-
         ${{ needs.setup.outputs.is_tag == 'true' && github.sha || github.event.inputs.metabase_image_tag }}
       TF_VAR_google_client_id: ${{ secrets.GOOGLE_CLIENT_ID }}
+      TF_VAR_smtp_password: ${{ secrets.SMTP_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v7.0.1

@@ -6,7 +6,6 @@ on:
     paths:
       - "terraform/**"
       - "metabase/**"
-      - ".github/workflows/terraform-plan.yml"
 
 defaults:
   run:

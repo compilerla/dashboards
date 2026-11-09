@@ -19,3 +19,10 @@ variable "google_client_id" {
   description = "Google OAuth 2.0 Client ID for Google Sign-In."
   type        = string
 }
+
+variable "smtp_password" {
+  default     = ""
+  description = "App Password for Google Workspace SMTP relay."
+  sensitive   = true
+  type        = string
+}

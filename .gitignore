@@ -1,6 +1,10 @@
 # Environment files
 .env
 
+# Dev container auth config
+.devcontainer/config/.config/gcloud/
+.devcontainer/config/.config/gh/
+
 # Terraform local state and modules
 **/.terraform/
 *.tfstate

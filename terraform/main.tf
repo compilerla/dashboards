@@ -59,6 +59,7 @@ module "metabase" {
   region                    = var.region
   service_account_email     = module.iam.metabase_service_account_email
   google_client_id          = var.google_client_id
+  smtp_password             = var.smtp_password
 
   depends_on = [module.apis, module.iam, module.database]
 }
