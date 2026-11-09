@@ -10,8 +10,7 @@ variable "region" {
   type        = string
 }
 
-
-variable "container_image" {
+variable "metabase_image_tag" {
   description = "Docker image tag for the Metabase Cloud Run service."
   type        = string
 }

@@ -3,8 +3,8 @@ name: Deploy
 on:
   workflow_dispatch:
     inputs:
-      metabase_image:
-        description: "Metabase Docker image tag (e.g. ghcr.io/compilerla/dashboards/metabase:<sha>)"
+      metabase_image_tag:
+        description: "Metabase Docker image tag (e.g. v0.65.2 or a Git SHA)"
         required: true
   push:
     tags:
@@ -75,10 +75,8 @@ jobs:
     if: (always() && !cancelled() && !failure())
     environment: ${{ needs.setup.outputs.env_name }}
     env:
-      TF_VAR_container_image: >-
-        ${{ needs.setup.outputs.is_tag == 'true' &&
-          format('ghcr.io/compilerla/dashboards/metabase:{0}', github.sha) ||
-          github.event.inputs.metabase_image }}
+      TF_VAR_metabase_image_tag: >-
+        ${{ needs.setup.outputs.is_tag == 'true' && github.sha || github.event.inputs.metabase_image_tag }}
       TF_VAR_google_client_id: ${{ secrets.GOOGLE_CLIENT_ID }}
     steps:
       - name: Checkout

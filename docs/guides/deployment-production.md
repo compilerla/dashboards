@@ -11,7 +11,7 @@ Production deployments are triggered automatically by pushing a release tag to t
 1. A release tag is pushed (e.g., `git push origin 2024.11.08`).
 2. GitHub Actions runs `deploy.yml`:
     - Builds the custom Metabase Docker image from `./metabase/Dockerfile` and pushes it to GHCR (`ghcr.io/compilerla/dashboards/metabase:<sha>`).
-    - Terraform applies infrastructure changes, injecting the new image reference via `TF_VAR_container_image`.
+    - Terraform applies infrastructure changes, injecting the new image tag via `TF_VAR_metabase_image_tag` in GitHub Actions.
     - Cloud Run rolls out the new Metabase container, which uses `socat` to bridge Cloud Run's Cloud SQL Unix socket to TCP 5432 for standard PostgreSQL JDBC.
 3. If it's a final release tag (no `-rc` suffix), a GitHub release is created with generated release notes.
 
@@ -19,11 +19,11 @@ Production deployments are triggered automatically by pushing a release tag to t
 
 When triggering manually via `workflow_dispatch`, you must provide:
 
-- **`metabase_image`**: The full GHCR image reference to deploy (e.g., `ghcr.io/compilerla/dashboards/metabase:<sha>`).
+- **`metabase_image_tag`**: The Docker image tag to deploy (e.g. `v0.65.2` or a Git SHA). The registry path (`ghcr.io/compilerla/dashboards/metabase`) is hardcoded in Terraform.
 
 ## Manual Steps (Dev/Test)
 
-For non-production environments, the same workflow runs via `workflow_dispatch` with the `metabase_image` input, or automatically via `-rc` release candidate tags.
+For non-production environments, the same workflow runs via `workflow_dispatch` with the `metabase_image_tag` input, or automatically via `-rc` release candidate tags.
 
 ## Cost Estimates
 
