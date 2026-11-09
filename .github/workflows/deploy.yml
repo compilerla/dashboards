@@ -115,6 +115,9 @@ jobs:
           tags: ghcr.io/compilerla/dashboards/metabase:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            IMAGE_VERSION=${{ github.sha }}
+            IMAGE_CREATED=${{ github.event.head_commit.timestamp }}
 
       - name: Terraform Init
         run: ./init.sh "${{ needs.setup.outputs.env_name }}"
