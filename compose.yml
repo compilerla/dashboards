@@ -8,6 +8,8 @@ services:
     image: "compilerla/dashboards:dev"
     volumes:
       - "./:/home/compiler/src"
+      - "./.devcontainer/config/.config/gcloud:/home/compiler/.config/gcloud"
+      - "./.devcontainer/config/.config/gh:/home/compiler/.config/gh"
     env_file:
       - ".env"
     depends_on:
