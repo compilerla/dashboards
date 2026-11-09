@@ -12,15 +12,39 @@ resource "google_cloud_run_v2_service" "metabase" {
   template {
     service_account = var.service_account_email
     containers {
-      image = var.container_image
+      image = "ghcr.io/compilerla/dashboards/metabase:${var.container_image_tag}"
+      ports {
+        container_port = 3000
+      }
       env {
         name  = "JAVA_OPTS"
         value = var.java_opts
       }
       env {
-        name  = "MB_DB_URI"
-        value = "jdbc:postgresql:////${var.cloud_sql_connection_name}/${var.database_name}"
+        name  = "CLOUD_SQL_INSTANCE_CONNECTION_NAME"
+        value = var.cloud_sql_connection_name
       }
+
+      env {
+        name  = "MB_DB_TYPE"
+        value = "postgres"
+      }
+
+      env {
+        name  = "MB_DB_DBNAME"
+        value = var.database_name
+      }
+
+      env {
+        name  = "MB_DB_HOST"
+        value = "127.0.0.1"
+      }
+
+      env {
+        name  = "MB_DB_USER"
+        value = var.database_user
+      }
+
       env {
         name = "MB_DB_PASS"
         value_source {
@@ -29,10 +53,6 @@ resource "google_cloud_run_v2_service" "metabase" {
             version = "latest"
           }
         }
-      }
-      env {
-        name  = "MB_DB_USER"
-        value = var.database_user
       }
       env {
         name = "MB_ENCRYPTION_SECRET_KEY"
@@ -55,6 +75,22 @@ resource "google_cloud_run_v2_service" "metabase" {
       env {
         name  = "MB_SITE_URL"
         value = "https://${var.service_name}.${local.region_suffix}.a.run.app"
+      }
+      env {
+        name  = "MB_GOOGLE_AUTH_ENABLED"
+        value = "true"
+      }
+      env {
+        name  = "MB_GOOGLE_AUTH_CLIENT_ID"
+        value = var.google_client_id
+      }
+      env {
+        name  = "MB_GOOGLE_AUTH_AUTO_CREATE_ACCOUNTS_DOMAIN"
+        value = "compiler.la"
+      }
+      env {
+        name  = "MB_ENABLE_PASSWORD_LOGIN"
+        value = "true"
       }
       resources {
         limits = {

@@ -37,3 +37,20 @@ resource "google_secret_manager_secret_version" "metabase_session_key" {
   secret      = google_secret_manager_secret.metabase_session_key.id
   secret_data = random_password.metabase_session_secret_key.result
 }
+
+# SMTP Password Secret
+resource "google_secret_manager_secret" "smtp_password" {
+  project   = var.project_id
+  secret_id = "metabase-smtp-password"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "smtp_password" {
+  count       = var.smtp_password != "" ? 1 : 0
+
+  secret      = google_secret_manager_secret.smtp_password.id
+  secret_data = var.smtp_password
+}

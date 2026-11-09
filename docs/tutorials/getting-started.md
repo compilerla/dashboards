@@ -18,15 +18,17 @@ This repository follows Compiler's cross-platform [Dev Containers](https://code.
 
 ### Getting Started
 
-1. Copy the sample environment file:
+1. Create and configure your local environment file:
 
    ```bash
    cp .env.example .env
    ```
+
+   Edit `.env` to set your desired values. The `metabase` service will connect to the local `postgres` service using the `MB_DB_TYPE`/`MB_DB_HOST`/`MB_DB_DBNAME` values from this file.
 
 2. Open this folder in VS Code.
 3. When prompted, click **"Reopen in Container"** (or press `F1` / `Ctrl+Shift+P` / `Cmd+Shift+P` and run `Dev Containers: Reopen in Container`).
 4. VS Code will build the dev container and launch all three services:
    - **`dev`**: Your development shell containing `terraform`, `gcloud`, `pre-commit`, and Postgres client tools.
    - **`postgres`**: Local PostgreSQL 18 database storing Metabase application state.
-   - **`metabase`**: Official Metabase application available at [http://localhost:3000](http://localhost:3000).
+   - **`metabase`**: Custom Metabase application (socat bridges Cloud SQL Unix socket to TCP 5432 for prod; connects directly to local postgres for dev) connecting to local postgres. Available at [http://localhost:3000](http://localhost:3000).

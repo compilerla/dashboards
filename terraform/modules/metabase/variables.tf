@@ -3,9 +3,8 @@ variable "cloud_sql_connection_name" {
   type        = string
 }
 
-variable "container_image" {
-  default     = "metabase/metabase:v0.65.2"
-  description = "Docker image tag for Metabase."
+variable "container_image_tag" {
+  description = "Docker image tag for the Metabase Cloud Run service."
   type        = string
 }
 
@@ -69,5 +68,17 @@ variable "service_account_email" {
 variable "service_name" {
   default     = "metabase"
   description = "Name of the Cloud Run service."
+  type        = string
+}
+
+variable "google_client_id" {
+  description = "Google OAuth 2.0 Client ID for Google Sign-In."
+  type        = string
+}
+
+variable "smtp_password" {
+  default     = ""
+  description = "Password for Google Workspace SMTP relay."
+  sensitive   = true
   type        = string
 }

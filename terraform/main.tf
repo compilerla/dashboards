@@ -32,14 +32,6 @@ module "bigquery" {
   depends_on = [module.apis, module.iam]
 }
 
-module "secrets" {
-  source = "./modules/secrets"
-
-  project_id = var.project_id
-
-  depends_on = [module.apis]
-}
-
 module "database" {
   source = "./modules/database"
 
@@ -60,11 +52,13 @@ module "metabase" {
   source = "./modules/metabase"
 
   cloud_sql_connection_name = module.database.connection_name
+  container_image_tag       = var.metabase_image_tag
   database_name             = module.database.database_name
   database_user             = module.database.database_user
   project_id                = var.project_id
   region                    = var.region
   service_account_email     = module.iam.metabase_service_account_email
+  google_client_id          = var.google_client_id
 
   depends_on = [module.apis, module.iam, module.database]
 }

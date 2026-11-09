@@ -7,7 +7,7 @@ This section contains technical details about the infrastructure.
 ### Cloud Run
 
 - Service: `metabase`
-- Image: `metabase/metabase:v0.65.2`
+- Image: `ghcr.io/compilerla/dashboards/metabase` (tagged per-commit SHA, set via `TF_VAR_metabase_image_tag` in GitHub Actions)
 - Region: `us-west1`
 - Scaling: min 1, max 3 instances
 - CPU/Memory: 1 vCPU / 4 GiB RAM (limits)

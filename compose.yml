@@ -10,12 +10,6 @@ services:
       - "./:/home/compiler/src"
     env_file:
       - ".env"
-    environment:
-      MB_DB_HOST: "postgres"
-      MB_DB_PORT: "5432"
-      MB_DB_USER: "metabase"
-      MB_DB_DBNAME: "metabase"
-      METABASE_URL: "http://metabase:3000"
     depends_on:
       postgres:
         condition: "service_healthy"
@@ -30,19 +24,14 @@ services:
     volumes:
       - "./:/home/compiler/src"
   metabase:
-    image: "metabase/metabase:v0.65.2"
+    build:
+      context: "./metabase"
+      dockerfile: "Dockerfile"
     container_name: "metabase"
     ports:
       - "3000:3000"
     env_file:
       - ".env"
-    environment:
-      MB_DB_TYPE: "postgres"
-      MB_DB_DBNAME: "metabase"
-      MB_DB_PORT: "5432"
-      MB_DB_HOST: "postgres"
-      MB_ADMIN_EMAIL: "${MB_ADMIN_EMAIL:-admin@localhost}"
-      MB_ADMIN_PASSWORD: "${MB_ADMIN_PASSWORD:-admin}"
     depends_on:
       postgres:
         condition: "service_healthy"
@@ -50,10 +39,8 @@ services:
   postgres:
     image: "postgres:18-alpine"
     container_name: "postgres"
-    environment:
-      POSTGRES_DB: "metabase"
-      POSTGRES_USER: "metabase"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-metabase}"
+    env_file:
+      - ".env"
     volumes:
       - "postgres_data:/var/lib/postgresql"
     healthcheck:
