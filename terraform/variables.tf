@@ -26,3 +26,9 @@ variable "smtp_password" {
   sensitive   = true
   type        = string
 }
+
+variable "deletion_protection" {
+  default     = true
+  description = "Whether to enable deletion protection for GCP services."
+  type        = bool
+}

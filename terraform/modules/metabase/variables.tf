@@ -71,6 +71,12 @@ variable "service_name" {
   type        = string
 }
 
+variable "deletion_protection" {
+  default     = true
+  description = "Whether to enable deletion protection for the Cloud Run service."
+  type        = bool
+}
+
 variable "google_client_id" {
   description = "Google OAuth 2.0 Client ID for Google Sign-In."
   type        = string

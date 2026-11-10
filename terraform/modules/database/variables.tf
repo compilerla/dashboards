@@ -24,7 +24,7 @@ variable "database_version" {
 }
 
 variable "deletion_protection" {
-  default     = false
+  default     = true
   description = "Whether deletion protection is enabled on the Cloud SQL instance to prevent accidental teardown."
   type        = bool
 }

@@ -49,7 +49,7 @@ resource "google_secret_manager_secret" "smtp_password" {
 }
 
 resource "google_secret_manager_secret_version" "smtp_password" {
-  count       = var.smtp_password != "" ? 1 : 0
+  count = var.smtp_password != "" ? 1 : 0
 
   secret      = google_secret_manager_secret.smtp_password.id
   secret_data = var.smtp_password
