@@ -17,6 +17,7 @@ tfplan
 __pycache__/
 *.py[cod]
 *$py.class
+.coverage
 .pytest_cache/
 .venv/
 venv/
