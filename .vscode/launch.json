@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python Debugger: ingestion with Arguments",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "ingestion/main.py",
+      "console": "integratedTerminal",
+      "args": ["${command:pickArgs}"]
+    }
+  ]
+}

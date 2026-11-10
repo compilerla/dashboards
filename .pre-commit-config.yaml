@@ -25,3 +25,24 @@ repos:
       - id: "end-of-file-fixer"
       - id: "mixed-line-ending"
       - id: "trailing-whitespace"
+
+  - repo: "https://github.com/psf/black"
+    rev: "25.1.0"
+    hooks:
+      - id: "black"
+
+  - repo: "https://github.com/PyCQA/isort"
+    rev: "6.0.0"
+    hooks:
+      - id: "isort"
+
+  - repo: "https://github.com/pycqa/flake8"
+    rev: "7.1.0"
+    hooks:
+      - id: "flake8"
+
+  - repo: "https://github.com/PyCQA/bandit"
+    rev: "1.8.6"
+    hooks:
+      - id: "bandit"
+        files: .py$
