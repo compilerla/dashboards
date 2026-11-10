@@ -27,7 +27,7 @@ jobs:
       - name: Get latest tagged image SHA
         id: latest-tag
         run: |
-          SHA=$(curl -s "https://api.github.com/repos/compilerla/dashboards/tags?per_page=1" \
+          SHA=$(curl -s "https://api.github.com/repos/compilerla/warehouse/tags?per_page=1" \
             | jq -r '.[0].commit.sha')
           if [[ -z "$SHA" ]]; then
             echo "No release tags found, aborting" >&2

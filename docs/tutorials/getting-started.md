@@ -1,4 +1,4 @@
-# Getting Started with Dashboards
+# Getting Started with Compiler's Warehouse
 
 This is a tutorial on how to set up your local development environment.
 

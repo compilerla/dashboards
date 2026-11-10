@@ -1,4 +1,4 @@
-# Dashboards
+# Compiler's Warehouse
 
 Documentation for Compiler's analytics and business intelligence workspace.
 

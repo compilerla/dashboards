@@ -1,6 +1,6 @@
 # Deploying to Production
 
-This guide explains how to deploy the dashboards to production.
+This guide explains how to deploy the warehouse to production.
 
 ## Automated Deployment (Tag Push)
 
@@ -10,16 +10,16 @@ Production deployments are triggered automatically by pushing a release tag to t
 
 1. A release tag is pushed (e.g., `git push origin 2024.11.08`).
 2. GitHub Actions runs `deploy.yml`:
-    - Builds the custom Metabase Docker image from `./metabase/Dockerfile` and pushes it to GHCR (`ghcr.io/compilerla/dashboards/metabase:<sha>`).
-    - Terraform applies infrastructure changes, injecting the new image tag via `TF_VAR_metabase_image_tag` in GitHub Actions.
-    - Cloud Run rolls out the new Metabase container, which uses `socat` to bridge Cloud Run's Cloud SQL Unix socket to TCP 5432 for standard PostgreSQL JDBC.
+   - Builds the custom Metabase Docker image from `./metabase/Dockerfile` and pushes it to GHCR (`ghcr.io/compilerla/warehouse/metabase:<sha>`).
+   - Terraform applies infrastructure changes, injecting the new image tag via `TF_VAR_metabase_image_tag` in GitHub Actions.
+   - Cloud Run rolls out the new Metabase container, which uses `socat` to bridge Cloud Run's Cloud SQL Unix socket to TCP 5432 for standard PostgreSQL JDBC.
 3. If it's a final release tag (no `-rc` suffix), a GitHub release is created with generated release notes.
 
 ### Required Inputs (workflow_dispatch)
 
 When triggering manually via `workflow_dispatch`, you must provide:
 
-- **`metabase_image_tag`**: The Docker image tag to deploy (e.g. `v0.65.2` or a Git SHA). The registry path (`ghcr.io/compilerla/dashboards/metabase`) is hardcoded in Terraform.
+- **`metabase_image_tag`**: The Docker image tag to deploy (e.g. `v0.65.2` or a Git SHA). The registry path (`ghcr.io/compilerla/warehouse/metabase`) is hardcoded in Terraform.
 
 ## Manual Steps (Dev/Test)
 

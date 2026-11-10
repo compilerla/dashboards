@@ -1,7 +1,7 @@
-site_name: "Compiler Dashboards: Documentation"
-repo_url: https://github.com/compilerla/dashboards
+site_name: "Compiler Warehouse: Documentation"
+repo_url: https://github.com/compilerla/warehouse
 edit_uri: edit/main/docs
-site_url: https://docs.compiler.la/dashboards
+site_url: https://docs.compiler.la/warehouse
 
 theme:
   name: material

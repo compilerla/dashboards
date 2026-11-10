@@ -4,21 +4,21 @@ This runbook covers how to upgrade the Metabase container image on Cloud Run via
 
 ## Current Configuration
 
-| Setting        | Value                                          |
-| -------------- | ---------------------------------------------- |
-| Service name   | metabase                                       |
-| Region         | us-west1                                       |
-| Image          | `ghcr.io/compilerla/dashboards/metabase:<sha>` |
-| CPU limit      | 1 vCPU                                         |
-| Memory limit   | 4 GiB                                          |
-| Min instances  | 1                                              |
-| Max instances  | 3                                              |
-| Container port | 3000                                           |
-| Cloud Run URL  | `https://metabase-2xhfhhdfxq-uw.a.run.app`     |
+| Setting        | Value                                         |
+| -------------- | --------------------------------------------- |
+| Service name   | metabase                                      |
+| Region         | us-west1                                      |
+| Image          | `ghcr.io/compilerla/warehouse/metabase:<sha>` |
+| CPU limit      | 1 vCPU                                        |
+| Memory limit   | 4 GiB                                         |
+| Min instances  | 1                                             |
+| Max instances  | 3                                             |
+| Container port | 3000                                          |
+| Cloud Run URL  | `https://metabase-2xhfhhdfxq-uw.a.run.app`    |
 
 ## Prerequisites
 
-- Push access to the `compilerla/dashboards` repository
+- Push access to the `compilerla/warehouse` repository
 - Write access to the `metabase/` directory (Dockerfile and entrypoint)
 
 ## Upgrade Procedure
@@ -42,7 +42,7 @@ git push origin 2026.11.1
 
 This triggers the `Deploy` GitHub Actions workflow:
 
-1. **Build**: The Dockerfile is built and pushed to GHCR (`ghcr.io/compilerla/dashboards/metabase:<sha>`)
+1. **Build**: The Dockerfile is built and pushed to GHCR (`ghcr.io/compilerla/warehouse/metabase:<sha>`)
 2. **Terraform**: The new image tag is injected via `TF_VAR_metabase_image_tag` and applied
 3. **Cloud Run**: The new revision is rolled out automatically
 

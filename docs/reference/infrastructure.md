@@ -7,7 +7,7 @@ This section contains technical details about the infrastructure.
 ### Cloud Run
 
 - Service: `metabase`
-- Image: `ghcr.io/compilerla/dashboards/metabase` (tagged per-commit SHA, set via `TF_VAR_metabase_image_tag` in GitHub Actions)
+- Image: `ghcr.io/compilerla/warehouse/metabase` (tagged per-commit SHA, set via `TF_VAR_metabase_image_tag` in GitHub Actions)
 - Region: `us-west1`
 - Scaling: min 1, max 3 instances
 - CPU/Memory: 1 vCPU / 4 GiB RAM (limits)
@@ -61,7 +61,7 @@ This section contains technical details about the infrastructure.
 - Pool: `github-actions-pool`
 - Provider: `github-actions-provider`
 - OIDC Issuer: `https://token.actions.githubusercontent.com`
-- Condition: `assertion.repository == 'compilerla/dashboards'`
+- Condition: `assertion.repository == 'compilerla/warehouse'`
 - Binding: `github-actions-runner` service account granted `roles/iam.workloadIdentityUser` via the WIF pool
 
 ### Enabled APIs

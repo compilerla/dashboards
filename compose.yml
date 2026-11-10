@@ -5,7 +5,7 @@ services:
       dockerfile: ".devcontainer/Dockerfile"
     entrypoint: []
     command: "sleep infinity"
-    image: "compilerla/dashboards:dev"
+    image: "compilerla/warehouse:dev"
     volumes:
       - "./:/home/compiler/src"
       - "./.devcontainer/config/.config/gcloud:/home/compiler/.config/gcloud"
@@ -18,7 +18,7 @@ services:
       metabase:
         condition: "service_started"
   docs:
-    image: "compilerla/dashboards:dev"
+    image: "compilerla/warehouse:dev"
     entrypoint: mkdocs
     command: serve --livereload --dev-addr "0.0.0.0:8001"
     ports:

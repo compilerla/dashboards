@@ -1,6 +1,6 @@
 # Production Cost Estimates
 
-This page provides an initial monthly pricing estimate for the production environment of the Dashboards project. These figures are based on minimal production-ready configurations and low request volumes.
+This page provides an initial monthly pricing estimate for the production environment of the Warehouse project. These figures are based on minimal production-ready configurations and low request volumes.
 
 ## Monthly Estimated Cost Breakdown
 

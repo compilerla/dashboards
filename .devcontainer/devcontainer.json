@@ -1,5 +1,5 @@
 {
-  "name": "compilerla/dashboards",
+  "name": "compilerla/warehouse",
   "dockerComposeFile": ["../compose.yml"],
   "service": "dev",
   "runServices": ["dev", "docs"],

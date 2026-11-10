@@ -37,5 +37,5 @@ variable "attribute_mapping" {
 variable "attribute_condition" {
   description = "Condition for the provider"
   type        = string
-  default     = "assertion.repository == 'compilerla/dashboards'"
+  default     = "assertion.repository == 'compilerla/warehouse'"
 }
