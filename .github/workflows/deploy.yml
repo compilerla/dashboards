@@ -137,9 +137,14 @@ jobs:
           skip-comment: true
           working-directory: terraform
 
-  release:
+  health-check:
     needs: [terraform-apply]
-    if: ${{ needs.setup.outputs.is_release == 'true' }}
+    uses: ./.github/workflows/health-check.yml
+    secrets: inherit
+
+  release:
+    needs: [health-check]
+    if: needs.setup.outputs.is_release == 'true' && needs.health-check.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       # https://github.com/softprops/action-gh-release#permissions

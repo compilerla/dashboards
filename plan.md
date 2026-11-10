@@ -86,7 +86,9 @@ Refer to [docs/reference/structure.md](docs/reference/structure.md) for the deta
    - Configure Google Workspace OAuth and SMTP relay.
    - Connect BigQuery datasets and establish permission groups.
 5. **Phase 5: Backup & Upgrade Runbooks**:
-   - Document automated backup verification and container image bump process.
+   - Document automated backup verification: [Cloud SQL Backup Verification](docs/guides/cloud-sql-backup-verification.md)
+   - Document container image upgrade procedure via GitHub Actions CI/CD: [Container Image Upgrade](docs/guides/container-image-upgrade.md)
+   - Add Cloud Run health check job to GitHub Actions (periodic + post-deploy): [.github/workflows/health-check.yml](.github/workflows/health-check.yml)
 6. **Phase 6: Data Ingestion (Workflows & GCS)**:
    - Set up Cloud Workflows and Cloud Run jobs.
    - Implement Python-based logic for API and CSV ingestion.
