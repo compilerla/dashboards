@@ -1,0 +1,13 @@
+FROM python:3.14-trixie
+
+# Install tzdata and git for ingestion tooling
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r compiler && useradd -r -g compiler -m compiler
+USER compiler

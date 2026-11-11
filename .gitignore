@@ -17,9 +17,13 @@ tfplan
 __pycache__/
 *.py[cod]
 *$py.class
+.coverage
 .pytest_cache/
 .venv/
 venv/
+build/
+dist/
+*.egg-info/
 
 # OS and Editor
 .DS_Store

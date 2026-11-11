@@ -1,0 +1,70 @@
+[project]
+name = "ingestion"
+dynamic = ["version"]
+description = "Data ingestion framework for the Compiler analytics warehouse."
+requires-python = ">=3.14"
+dependencies = [
+    "click>=8.1",
+    "google-cloud-storage>=2.18",
+    "pendulum>=3.0",
+    "pydantic>=2.0",
+    "sentry-sdk>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "build",
+    "flake8",
+    "isort",
+    "pre-commit",
+    "setuptools-scm>=8",
+]
+test = [
+    "coverage",
+    "pytest",
+    "pytest-mock",
+    "pytest-socket",
+]
+
+[project.scripts]
+ingestion = "ingestion.main:main"
+
+[build-system]
+requires = ["setuptools>=65", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ingestion"]
+
+[tool.setuptools_scm]
+
+[tool.black]
+line-length = 127
+target-version = ["py313"]
+include = "\\.pyi?$"
+
+[tool.coverage.run]
+branch = true
+relative_files = true
+source = ["ingestion"]
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+line_length = 127
+skip_gitignore = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "e2e: marks tests that need a live GCP environment",
+]
+norecursedirs = [
+    "*.egg-info",
+    ".git",
+    ".pytest_cache",
+    ".vscode",
+    "build",
+    "dist",
+]

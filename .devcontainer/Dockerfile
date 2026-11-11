@@ -64,10 +64,13 @@ ENV PATH="$PATH:/home/$USER/.local/bin" \
     # https://pip.pypa.io/en/stable/cli/pip/#cmdoption-cache-dir
     PIP_CACHE_DIR="/home/${USER}/.cache/pip"
 
+COPY .git .git
+COPY ingestion/ ingestion/
 COPY docs/requirements.txt docs/requirements.txt
+COPY pyproject.toml pyproject.toml
 
 # Update pip and install Python tooling
 RUN --mount=type=cache,id=pipcache,target=${PIP_CACHE_DIR},uid=${USER_UID},gid=${USER_GID} \
     python -m pip install --user --upgrade pip && \
-    python -m pip install --user pre-commit && \
+    python -m pip install --user -e ".[dev,test]" && \
     python -m pip install --user -r docs/requirements.txt
