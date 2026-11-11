@@ -6,6 +6,7 @@ requires-python = ">=3.14"
 dependencies = [
     "click>=8.1",
     "google-cloud-storage>=2.18",
+    "pandas>=2.0",
     "pendulum>=3.0",
     "pydantic>=2.0",
     "sentry-sdk>=2.0",
@@ -22,6 +23,7 @@ dev = [
 ]
 test = [
     "coverage",
+    "pendulum[test]>=3.0",
     "pytest",
     "pytest-mock",
     "pytest-socket",
