@@ -1,6 +1,8 @@
 # Source registration will happen when sources are loaded
 import click
 
+from ingestion.base import cli
+
 
 @click.group()
 @click.version_option()
@@ -25,9 +27,10 @@ def register_source(group: click.Group, source_name: str, puller_class) -> None:
     @click.argument("action", type=click.Choice(["pull"]))
     @click.option("--start", "start_date", help="Start date (absolute or relative keyword)")
     @click.option("--end", "end_date", help="End date (absolute or relative keyword)")
-    def pull(action, start_date, end_date):
-        """Pull data from the source."""
+    def pull(action: str, start_date: str | None, end_date: str | None):
+        """Pull data for the given date range."""
+        resolved_start, resolved_end = cli.resolve_date_range(start_date, end_date)
         puller = puller_class()
-        puller.pull(source=source_name, start_date=start_date, end_date=end_date)
+        puller.pull(source=source_name, start_date=resolved_start, end_date=resolved_end)
 
     group.add_command(pull, source_name)
